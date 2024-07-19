@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>空间关系理解数据浏览</title>
+
+    <link href="dist/bootstrap_4.3.1_.min.css" rel="stylesheet">
+    <style type="text/css">
+        body{background: #eee;}
+        .bodywrap{min-height: 100vh;}
+        .container.page{background: #fff;}
+        .hidden{display: none;}
+        .m0{margin: 0;}
+        .form-control{border: 1px solid #eee;}
+        .progress-bar{transition: all 0.5s;}
+        .btn{transition: all 0.5s; margin: 1px;}
+        /*#footer{padding-bottom: 5rem;}*/
+        .container{transition: all 0.5s;}
+    </style>
+    <style type="text/css">
+        .card-wrap{margin: 1rem 0; padding: 1rem 1rem; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; transition: all 0.5s;}
+        .card{margin: 1rem 0; padding: 0.4rem 1rem; min-height: 2em; border: 1px solid #f6f6f6; border-radius: 6px;}
+        .card p{margin-bottom:0;}
+        /*.card-wrap.done{color: #6c757d; background: #fff; opacity: 0.5;}*/
+        .cluster-box{margin: 1rem 0; border: 1px solid #eee; border-radius: 6px;}
+        .cluster-wrap{margin: 1rem 0; padding: 0.01rem 1rem; max-height: 46vh; overflow-y: auto; background: #fefefe; border: 1px solid #eee; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2) inset; transition: all 0.5s;}
+        .cluster-wrap>.card{border: 1px solid #666;}
+        .cluster-wrap>.card .card{border: 1px solid #ccc;}
+    </style>
+    <style type="text/css">
+        @media print{
+            body{background: #fff; min-width:0 !important;}
+            .container{min-width:0 !important;}
+            .bodywrap{max-width: 100%;}
+            .page{max-width: 100%;}
+            blockquote, pre{page-break-inside: initial;}
+            .navbar{display: none;}
+            #page-import{display: none;}
+            #page-stage{display: none;}
+            #page-items-1{display: none;}
+            #page-items-2{display: none;}
+        }
+    </style>
+    <style type="text/css">
+        .text-example{/*max-height: 60vh; min-height: 60vh; */margin: 0.5em 0; padding: 0.5em 1em; font-size: inherit; background: #fafafa; color: inherit; white-space: pre-wrap; overflow: auto; border: 1px solid #eee; border-radius: 6px;}
+        .quotation{text-decoration:underline; color:#006;}
+        .frag-input{border-radius: 3px; border: 1px solid #eee; padding: 0 1px; margin: 0 1px; max-width: 4em; min-width: 1em;}
+        .frag-isEntity{color: steelblue;}
+        .frag-substitutable{color: #fa0;}
+        .frag-substitutable.frag-notSpatial{color: #666;}
+        .frag-changed{color: red;}
+        .frag-changed.frag-bert{color: red; background: yellow;}
+        .close-word{margin: 0 2px; padding: 0 2px; background: #eee; border-radius: 3px;}
+        .my-1 .disabled-input {
+            cursor: not-allowed;
+            border: 1px solid #f3f3f3;
+            border-top: 1px solid #ced4da;
+            border-bottom: 1px solid #ced4da;
+            background-color: #f3f3f3;
+        }
+        mark.new{background: #ffc;}
+    </style>
+    <style type="text/css">
+        .file-list-item p{margin-bottom:0;}
+        .not-in-use{text-decoration: line-through; color: #aaa;}
+        .num-input{width: 4em; height: 1.6em; line-height: 1.6em; border-radius: 3px; border: 1px solid #ccc;text-align: center;}
+        .cluster-wrap.cluster-wrap-h{max-height: 66vh;}
+    </style>
+
+
+</head>
+
+<body>
+
+<div class="bodywrap" id="bodywrap">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">空间关系理解数据浏览</a>
+    </nav>
+
+    <div class="container page my-4 py-2" id="page-files">
+        <div class="container card-wrap py-1">
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col">
+                        <div>
+                            <h4 class="my-1">文件列表</h4>
+                        </div>
+                    </div>
+                </div>
+                <form name="file-form" class="row my-1">
+                    <div class="col col-8 col-lg-10 my-2">
+                        <input type="file" class="form-control" name="file-input" id="file-input" multiple="multiple" accept=".json, .md, .txt" />
+                    </div>
+                    <div class="btn-group col col-4 col-lg-2 my-2">
+                        <button type="button" name="do_import" id="do_import" v-on:click="onImport" class="btn btn-primary">导入</button>
+                    </div>
+                </form>
+                <div class="row my-1">
+                    <div class="col">
+                        <div>
+                            <p>请在除去不需处理的文件之后，再进行后续处理。</p>
+                            <p>除去不需处理的文件的方法是：点击文件后方的「正常」，使之变为「禁用」即可。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-1">
+                    <div class="col">
+                        <div>
+                            <p>
+                                <button type="button" v-on:click="clearFiles()" class="btn btn-sm btn-primary">清除无用项</button>
+                                <button type="button" v-on:click="clearFiles('drop')" class="btn btn-sm btn-primary">清除禁用项</button>
+                                <button type="button" v-on:click="clearFiles('all')" class="btn btn-sm btn-primary">清空</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container py-1 cluster-wrap">
+                <div class="container card">
+                    <div class="row my-1 file-list-item" v-for="file in files">
+                        <div class="col col-8">
+                            <div>
+                                <p :class="{'not-in-use':((!file.isInUse)||(!file.isUsable))}">{{file.fileName}}</p>
+                            </div>
+                        </div>
+                        <div class="col col-4">
+                            <div>
+                                <p><button type="button" v-if="file.isUsable" v-on:click="file.isInUse=!file.isInUse" class="btn btn-sm" :class="{'btn-info':file.isInUse, 'btn-secondary':!file.isInUse}">{{file.isInUse?"正常":"禁用"}}</button><button type="button" v-if="!file.isUsable" v-on:click="file.isInUse=!file.isInUse" class="btn btn-sm btn-light">无用</button></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container page my-4 py-2" id="page-sum">
+        <div class="container card-wrap py-1">
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col">
+                        <div>
+                            <h4 class="my-1">数据汇总</h4>
+                            <p>此功能可将零散的数据文件汇总成一个完整文件。</p>
+                            <p v-if="!(files.length>0)">使用前请先导入文件（可批量导入）！</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-1" v-if="files.length>0">
+                    <div class="col">
+                        <div>
+                            <p>
+                                <button type="button" v-on:click="summing=true;makeAllCases();summing=false;" class="btn btn-sm btn-primary">开始汇总</button>
+                                <span v-if="!summed">（汇总需要时间，点击后请稍等）</span>
+                                <span v-if="summing">汇总中，请稍等……</span>
+                                <span v-if="summed">汇总完成！</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row my-1" v-if="summed">
+                    <div class="col">
+                        <div>
+                            <p>
+                                <button type="button" v-on:click="onExport" class="btn btn-sm btn-info">导出 table.json</button>
+                                <button type="button" v-on:click="onExportPaired" class="btn btn-sm btn-info">导出 paired.json</button>
+                                <button type="button" v-on:click="onExportPairedTable" class="btn btn-sm btn-info">导出 paired.table.json</button>
+                                <button type="button" v-on:click="makeMap" class="btn btn-sm btn-info">导出 map</button>
+                                <!-- <button type="button" v-on:click="onExport" class="btn btn-sm btn-info">导出 paired.table.json</button> -->
+                                <!-- <button type="button" oov-on:click="onExport" class="btn btn-sm btn-info">导出 txt<small>（可手动复制粘贴到 Excel 中）</small></button>
+                                <button type="button" oov-on:click="onExport" class="btn btn-sm btn-info">导出 json</button>
+                                <button v-if="summed" type="button" v-on:click="summed=false;" class="btn btn-sm btn-danger">清除</button> -->
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container page my-4 py-2" id="page-value">
+        <div class="container card-wrap py-1">
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col">
+                        <div>
+                            <h4 class="my-1">工作量及工资计算</h4>
+                            <p>此功能可计算各个工作人员的工作量和工资。</p>
+                            <p v-if="!summed">使用前请先汇总数据！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container card">
+                <div class="row my-1" oov-if="summed">
+                    <div class="col">
+                        <div>
+                            <h5 class="my-1">单位设置</h5>
+                            <p class="form-inline">判断原句是否有问题：每次记<input class="num-input" type="text" v-model="units_1">单位；</p>
+                            <p class="form-inline">判断替换词是否表示方位意义：每次记<input class="num-input" type="text" v-model="units_2">单位；</p>
+                            <p class="form-inline">对替换句进行标注：每句记<input class="num-input" type="text" v-model="units_3">单位；</p>
+                            <p class="form-inline">单价：每单位<input class="num-input" type="text" v-model="price">元。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-1" v-if="summed">
+                    <div class="col">
+                        <div>
+                            <p>
+                                <button type="button" v-on:click="computeWorks" class="btn btn-sm btn-primary">开始计算</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container card" v-if="summed">
+                <div class="container card">
+                    <div class="row my-1">
+                        <div class="col col-12 col-md-12">
+                            <h5 class="my-1">【所有人】</h5>
+                            <p>处理的文件数量（未配对）：{{files.filter(x => x.isUsable&&x.isInUse).length}}
+                            <!-- <br>处理的文件数量（配对后）：{{files.filter(x => x.isUsable&&x.isInUse).length/2}} -->
+                            <br>判断原句是否有问题：{{all_works.origins.size}}次 × {{units_1}}单位/次 = {{all_works.origins.size*units_1}} 单位
+                            <br>判断替换词是否表示方位意义：{{all_works.clusters.size}}次 × {{units_2}}单位/次 = {{all_works.clusters.size*units_2}} 单位
+                            <br>对替换句进行标注：{{all_works.items.size}}次 × {{units_3}}单位/次 = {{all_works.items.size*units_3}} 单位
+                            <br>合计：{{all_works.origins.size*units_1+all_works.clusters.size*units_2+all_works.items.size*units_3}} 单位
+                            <br>总金额：约 {{((all_works.origins.size*units_1+all_works.clusters.size*units_2+all_works.items.size*units_3)*price).toFixed(2)}} 元
+                            <!-- <br><span class="form-inline">若每单位计价<input class="num-input" type="text" v-model="price">元，则需要的预算大约为【{{(all_works.origins.size*units_1+all_works.clusters.size*units_2+all_works.items.size*units_3)*price}} 元】。</span>
+                            <br><span class="form-inline">若总预算为<input class="num-input" type="text" v-model="money">元，则单位价格为【{{money/(all_works.origins.size*units_1+all_works.clusters.size*units_2+all_works.items.size*units_3)}} 元】。</span> --></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="container card">
+                    <table class="table my-1">
+                        <thead>
+                            <tr>
+                                <th scope="col">姓名</th>
+                                <th scope="col">处理的文件</th>
+                                <th scope="col">处理的文件数量</th>
+                                <th scope="col"><small>判断原句是否有问题的次数（{{units_1}}单位/次）</small></th>
+                                <th scope="col"><small>判断替换词是否表示方位意义的次数（{{units_2}}单位/次）</small></th>
+                                <th scope="col"><small>对替换句进行标注的次数（{{units_3}}单位/次）</small></th>
+                                <th scope="col">工作单位总数</th>
+                                <th scope="col">工资<small>（单价{{price}}元）</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="work, worker in workers_works">
+                                <th scope="row">{{worker}}</th>
+                                <td><span v-for="vv, doc in work.files">{{doc}}, </span></td>
+                                <td>{{Object.keys(work.files).length}}</td>
+                                <td>{{work.origins.size}}</td>
+                                <td>{{work.clusters.size}}</td>
+                                <td>{{work.items.size}}</td>
+                                <td>{{work.origins.size*units_1+work.clusters.size*units_2+work.items.size*units_3}}</td>
+                                <td>{{((work.origins.size*units_1+work.clusters.size*units_2+work.items.size*units_3)*price).toFixed(2)}} 元</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="container card">
+                    <div class="row my-1">
+                        <div class="col col-12 col-md-12">
+                            <p><button type="button" v-on:click="outputComputeWorks" class="btn btn-sm btn-primary">导出工资单</button></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container py-1 cluster-wrap cluster-wrap-h" v-if="summed" ref="txt">
+                <div v-for="work, worker in workers_works" class="container card">
+                    <div class="row my-1">
+                        <div class="col col-12 col-md-12">
+                            <p></p>
+                            <p></p>
+                            <h5 class="my-1">【{{worker}}】</h5>
+                            <p>处理的文件数量：{{Object.keys(work.files).length}}
+                            <br>判断原句是否有问题：{{work.origins.size}}次 × {{units_1}}单位/次 = {{(work.origins.size*units_1).toFixed(2)}} 单位
+                            <br>判断替换词是否表示方位意义：{{work.clusters.size}}次 × {{units_2}}单位/次 = {{(work.clusters.size*units_2).toFixed(2)}} 单位
+                            <br>对替换句进行标注：{{work.items.size}}次 × {{units_3}}单位/次 = {{(work.items.size*units_3).toFixed(2)}} 单位
+                            <br>合计：<strong>{{(work.origins.size*units_1+work.clusters.size*units_2+work.items.size*units_3).toFixed(2)}} 单位</strong>
+                            <br>工资：<strong>{{((work.origins.size*units_1+work.clusters.size*units_2+work.items.size*units_3)*price).toFixed(2)}} 元</strong><small>（单价{{price}}元）</small></p>
+<!--
+                            <p><small>文件均价：{{((work.origins.size*units_1+work.clusters.size*units_2+work.items.size*units_3)*price).toFixed(2)/(Object.keys(work.files).length)}} 元</small></p> -->
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col col-12 col-md-12">
+                            <div class="container card">
+                                <h6 class="my-1">工作量详情</h6>
+                                <table class="table my-1">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">文件</th>
+                                            <th scope="col">批次</th>
+                                            <th scope="col">原句总数</th>
+                                            <th scope="col">替换词实际处理数/总数</th>
+                                            <th scope="col">替换句实际处理数/总数</th><!--
+                                            <th scope="col">合计</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="vv, doc in work.files">
+                                            <th scope="row">{{doc}}</th>
+                                            <td>{{vv.批次}}</td>
+                                            <td>{{vv.原句.size}}</td>
+                                            <td>{{vv.处理的替换词.size}}/{{vv.替换词.size}}</td>
+                                            <td>{{vv.处理的替换句.size}}/{{vv.替换句.size}}</td><!--
+                                            <td>{{vv.原句.size+vv.处理的替换句.size+vv.处理的替换句.size}}/{{vv.原句.size+vv.替换词.size+vv.替换句.size}}</td> -->
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">总计</th>
+                                            <td>-</td>
+                                            <td>{{work.origins.size}}</td>
+                                            <td>{{work.clusters.size}}/{{work.clusters_all.size}}</td>
+                                            <td>{{work.items.size}}/{{work.items_all.size}}</td><!--
+                                            <td>{{work.origins.size+work.clusters.size+work.items.size}}/{{work.origins.size+work.clusters_all.size+work.items_all.size}}</td> -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+<!--
+                            <p>【原句（{{work.origins.size}}）】{{[... work.origins.entries()]}}</p>
+                            <p>【替换词（{{work.clusters.size}}）】{{[... work.clusters.entries()]}}</p>
+                            <p>【替换句（{{work.items.size}}）】{{[... work.items.entries()]}}</p> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="container page my-4 py-2" id="page-all" v-if="cases.length>0">
+        <div class="container card-wrap py-1">
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col">
+                        <div>
+                            <h4 class="my-1">数据总览表</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container py-1 cluster-wrap">
+                <div class="container card">
+                    <div class="row my-1">
+                        <div class="col"><table class="table">
+                            <thead><tr><th v-for="v, k in cases[0]" scope="col">{{k}}</th></tr></thead>
+                            <tbody><tr v-for="data_case in cases"><td v-for="v in data_case">{{v}}</td></tr></tbody>
+                        </table></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+</div>
+
+    <script type="text/javascript" src="dist/vue_2.6.10_.min.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/d3/5.12.0/d3.min.js"></script> -->
+
+    <script type="text/javascript" src="dist/FileSaver.js"></script>
+    <script type="text/javascript" src="js/makeCases.js"></script>
+
+</body>
+
+</html>

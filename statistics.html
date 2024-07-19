@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>空间关系理解数据分析</title>
+
+    <link href="dist/bootstrap_4.3.1_.min.css" rel="stylesheet">
+    <style type="text/css">
+        body{background: #eee;}
+        .bodywrap{min-height: 100vh;}
+        .container.page{background: #fff;}
+        .hidden{display: none;}
+        .m0{margin: 0;}
+        .form-control{border: 1px solid #eee;}
+        .progress-bar{transition: all 0.5s;}
+        .btn{transition: all 0.5s; margin: 1px;}
+        /*#footer{padding-bottom: 5rem;}*/
+        .quotation{text-decoration:underline;}
+        .container{transition: max-width 1s, width 1s;}
+    </style>
+    <style type="text/css">
+        .card-wrap{margin: 1rem 0; padding: 1rem 1rem; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; transition: all 0.5s;}
+        .card{margin: 1rem 0; padding: 0.4rem 1rem; border: 1px solid #f6f6f6; border-radius: 6px;}
+        .card p{margin-bottom:0;}
+        /*.card-wrap.done{color: #6c757d; background: #fff; opacity: 0.5;}*/
+        .cluster-box{margin: 1rem 0; border: 1px solid #eee; border-radius: 6px;}
+        .cluster-wrap{margin: 1rem 0; padding: 0.01rem 1rem; max-height: 46vh; overflow-y: auto; background: #fefefe; border: 1px solid #eee; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2) inset; transition: max-height 1s;}
+        .cluster-wrap>.card{border: 1px solid #666;}
+    </style>
+    <style type="text/css">
+        .text-example{max-height: 60vh; min-height: 60vh; font-size: inherit; padding: 1em; background: #fafafa; white-space: pre-wrap; overflow: auto;}
+        .text-example[readonly]{background: #fafafa;}
+        .frag-input{border-radius: 3px; border: 1px solid #eee; padding: 0 1px; margin: 0 1px; max-width: 4em; min-width: 1em;}
+        .frag-isEntity{color: steelblue;}
+        .frag-substitutable{color: #fa0;}
+        .frag-substitutable.frag-notSpatial{color: #666;}
+        .frag-changed{color: red;}
+        .frag-changed.frag-bert{color: red; background: yellow;}
+        .close-word{margin: 0 2px; padding: 0 2px; background: #eee; border-radius: 3px;}
+        .my-1 .disabled-input {
+            cursor: not-allowed;
+            border: 1px solid #f3f3f3;
+            border-top: 1px solid #ced4da;
+            border-bottom: 1px solid #ced4da;
+            background-color: #f3f3f3;
+        }
+        .p-diff{color: #f00;}
+        .p-little-diff{color: #c00;}
+        .p-littlelittle-diff{color: #600;}
+    </style>
+
+
+</head>
+
+<body>
+
+<div class="bodywrap" id="bodywrap">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">空间关系理解数据分析</a>
+    </nav>
+
+    <div class="container page my-4 hiddent" id="page-import">
+        <form name="file-form" class="container py-2">
+            <div class="row" id="filePicker">
+                <!-- <label for="file-input" class="col-md-2 my-2 col-form-label text-md-right">选择文件：</label> -->
+                <div class="col-md-8 my-2">
+                    <input type="file" class="form-control" name="file-input" id="file-input" multiple="multiple" accept=".json, .md, .txt" />
+                </div>
+                <div class="btn-group col-md-4 my-2">
+                    <button type="button" name="do_import" id="do_import" v-on:click="onImport" class="btn btn-primary">导入</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container page my-4 py-2" id="page-overview"><div class="container card-wrap py-1">
+        <div class="container card">
+            <div class="row my-1">
+                <div class="col col-12 col-md-12">
+                    <div><p>【替换句总数量】{{替换句总数量}}</p></div>
+                    <div><p>　 　<br>　 　</p></div>
+                    <div><p>【适合评估一致性的替换句数量】{{适合评估一致性的替换句数量}}</p></div>
+                    <div><p class="p-diff">　【分别觉得成立和非成立的替换句数量】{{分别觉得成立和不成立的替换句数量+分别觉得成立和勉强成立的替换句数量}}（{{(分别觉得成立和不成立的替换句数量+分别觉得成立和勉强成立的替换句数量)/适合评估一致性的替换句数量}}，{{1-(分别觉得成立和不成立的替换句数量+分别觉得成立和勉强成立的替换句数量)/适合评估一致性的替换句数量}}）</p></div>
+                    <div><p class="p-diff">　　　【分别觉得成立和不成立的替换句数量】{{分别觉得成立和不成立的替换句数量}}（{{分别觉得成立和不成立的替换句数量/适合评估一致性的替换句数量}}，{{1-分别觉得成立和不成立的替换句数量/适合评估一致性的替换句数量}}）</p></div>
+                    <div><p class="p-diff">　　　【分别觉得成立和勉强成立的替换句数量】{{分别觉得成立和勉强成立的替换句数量}}</p></div>
+                    <div><p>　【都觉得成立的替换句数量】{{都觉得成立的替换句数量}}（{{都觉得成立的替换句数量/适合评估一致性的替换句数量}}）</p></div>
+                    <div><p>　　　【都觉得语义变化不大的替换句数量】{{都觉得语义变化不大的替换句数量}}</p></div>
+                    <div><p>　　　【都觉得语义变化大的替换句数量】{{都觉得语义变化大的替换句数量}}</p></div>
+                    <div><p class="p-little-diff">　　　【语义变化判断存在差异的替换句数量】{{语义变化判断存在差异的替换句数量}}</p></div>
+                    <div><p>　【都觉得不成立或勉强成立的替换句数量】{{都觉得不成立或勉强成立的替换句数量}}（{{都觉得不成立或勉强成立的替换句数量/适合评估一致性的替换句数量}}）</p></div>
+                    <div><p>　　　【都觉得不成立的替换句数量】{{都觉得不成立的替换句数量}}（{{都觉得不成立的替换句数量/适合评估一致性的替换句数量}}）</p></div>
+                    <div><p>　　　【都觉得勉强成立的替换句数量】{{都觉得勉强成立的替换句数量}}（{{都觉得勉强成立的替换句数量/适合评估一致性的替换句数量}}）</p></div>
+                    <div><p class="p-littlelittle-diff">　　　【分别觉得不成立和勉强成立的替换句数量】{{分别觉得不成立和勉强成立的替换句数量}}</p></div>
+                    <div><p class="p-little-diff">　　【细节归因不一致的替换句数量】{{都觉得不成立或勉强成立的替换句数量-粗细节一致的替换句数量}}</p></div>
+                    <div><p>　　【细节归因一致的替换句数量】{{粗细节一致的替换句数量}}</p></div>
+                    <div><p>　　【细节字符串一致的替换句数量】{{细节一致的替换句数量}}</p></div>
+                    <div><p class="p-littlelittle-diff">　　　【分别觉得不成立和勉强成立但字符串有所一致的替换句数量】{{分别觉得不成立和勉强成立但字符串有所一致的替换句数量}}</p></div>
+                    <div><p class="p-littlelittle-diff">　　　【都认为非成立且至少一个觉得勉强成立且字符串有所一致的替换句数量】{{都认为非成立且至少一个觉得勉强成立且字符串有所一致的替换句数量}}</p></div>
+                    <div><p class="p-littlelittle-diff">【判断题可出数量】{{判断题可出数量}}</p></div>
+                </div>
+            </div>
+        </div>
+    </div></div>
+
+    <!-- <div class="container page my-4 hiddent" id="page-stage"><div class="container py-2">
+        <div class="row">
+            <div class="btn-group col-12 my-2">
+                <button type="button" v-on:click="show_work=!show_work" class="btn" :class="show_work?'btn-primary':'btn-light'">工作量</button>
+                <button type="button" v-on:click="show_data=!show_data" class="btn" :class="show_data?'btn-primary':'btn-light'">数据</button>
+            </div>
+        </div>
+    </div></div> -->
+
+    <!-- <div class="container page my-4 py-2" id="page-workers" v-if="show_work">
+        <div v-for="work, worker in workers_works" class="container card-wrap py-1">
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col col-12 col-md-12">
+                        <p>【{{worker}}】</p>
+                        <p>判断原句是否有问题：{{work.origins.size}}次 × 1单位/次 = {{work.origins.size*1}} 单位</p>
+                        <p>判断替换词是否表示方位意义：{{work.clusters.size}}次 × 0.5单位/次 = {{work.clusters.size*0.5}} 单位</p>
+                        <p>对替换句进行标注：{{work.items.size}}次 × 2单位/次 = {{work.items.size*2}} 单位</p>
+                        <p>合计：{{work.origins.size*1}} 单位 + {{work.clusters.size*0.5}} 单位 + {{work.items.size*2}} 单位 = {{work.origins.size*1+work.clusters.size*0.5+work.items.size*2}} 单位</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="container page my-4 py-2" id="page-items" v-if="show_data">
+        <div class="container py-2">
+            <div class="row">
+                <div class="col-12 my-2">
+                    <button type="button" v-on:click="bang(0)" class="btn btn-sm" :class="{'btn-success':kaiguans[0], 'btn-light':!kaiguans[0]}">成立vs成立</button>
+                    <button type="button" v-on:click="bang(1)" class="btn btn-sm" :class="{'btn-success':kaiguans[1], 'btn-light':!kaiguans[1]}">不成立vs不成立</button>
+                    <button type="button" v-on:click="bang(2)" class="btn btn-sm" :class="{'btn-success':kaiguans[2], 'btn-light':!kaiguans[2]}">勉强成立vs勉强成立</button>
+                    <button type="button" v-on:click="bang(3)" class="btn btn-sm" :class="{'btn-success':kaiguans[3], 'btn-light':!kaiguans[3]}">成立vs不成立</button>
+                    <button type="button" v-on:click="bang(4)" class="btn btn-sm" :class="{'btn-success':kaiguans[4], 'btn-light':!kaiguans[4]}">成立vs勉强成立</button>
+                    <button type="button" v-on:click="bang(5)" class="btn btn-sm" :class="{'btn-success':kaiguans[5], 'btn-light':!kaiguans[5]}">不成立vs勉强成立</button>
+                    <button type="button" v-on:click="bang(6)" class="btn btn-sm" :class="{'btn-info':kaiguans[6], 'btn-light':!kaiguans[6]}">不成立vs勉强成立→原因类型有交叉</button>
+                    <button type="button" v-on:click="bang(7)" class="btn btn-sm" :class="{'btn-info':kaiguans[7], 'btn-light':!kaiguans[7]}">不成立vs勉强成立→具体解释有交叉</button>
+                    <button type="button" v-on:click="bang(8)" class="btn btn-sm" :class="{'btn-info':kaiguans[8], 'btn-light':!kaiguans[8]}">不成立vs勉强成立→原因类型有交叉但具体解释无交叉</button>
+                    <button type="button" v-on:click="bang(9)" class="btn btn-sm" :class="{'btn-info':kaiguans[9], 'btn-light':!kaiguans[9]}">不成立vs勉强成立→原因类型无交叉但具体解释有交叉</button>
+                    <button type="button" v-on:click="bang(10)" class="btn btn-sm" :class="{'btn-info':kaiguans[10], 'btn-light':!kaiguans[10]}">都选了搭配问题</button>
+                    <button type="button" v-on:click="bang(11)" class="btn btn-sm" :class="{'btn-info':kaiguans[11], 'btn-light':!kaiguans[11]}">都选了语义问题</button>
+                    <button type="button" v-on:click="bang(12)" class="btn btn-sm" :class="{'btn-info':kaiguans[12], 'btn-light':!kaiguans[12]}">都选了常识问题</button>
+                    <button type="button" v-on:click="bang(13)" class="btn btn-sm" :class="{'btn-info':kaiguans[13], 'btn-light':!kaiguans[13]}">都选了语境问题</button>
+                    <button type="button" v-on:click="bang(14)" class="btn btn-sm" :class="{'btn-info':kaiguans[14], 'btn-light':!kaiguans[14]}">都选了其他问题</button>
+                    <button type="button" v-on:click="bang(15)" class="btn btn-sm" :class="{'btn-info':kaiguans[15], 'btn-light':!kaiguans[15]}">常识或语境</button>
+                </div>
+            </div>
+        </div>
+        <div v-for="da in data" v-if='
+            (  kaiguans[0]&&da.标注者1初判断==2&&da.标注者2初判断==2  )||
+            (  kaiguans[1]&&da.标注者1初判断==1&&da.标注者2初判断==1  )||
+            (  kaiguans[2]&&da.标注者1初判断==4&&da.标注者2初判断==4  )||
+            (  kaiguans[3]&&(da.标注者1初判断==1&&da.标注者2初判断==2||da.标注者1初判断==2&&da.标注者2初判断==1)  )||
+            (  kaiguans[4]&&(da.标注者1初判断==2&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==2)  )||
+            (  kaiguans[5]&&(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1)  )||
+            (  kaiguans[6]&&(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1)&&(da.粗细节一致程度>0)  )||
+            (  kaiguans[7]&&(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1)&&(da.细节一致程度>0)  )||
+            (  kaiguans[8]&&(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1)&&(da.细节一致程度==0)&&(da.粗细节一致程度>0)  )||
+            (  kaiguans[9]&&(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1)&&(da.细节一致程度>0)&&(da.粗细节一致程度==0)  )||
+            (  kaiguans[10]&&(da.标注者1粗细节[0]==1&&da.标注者2粗细节[0]==1)  )||
+            (  kaiguans[11]&&(da.标注者1粗细节[1]==1&&da.标注者2粗细节[1]==1)  )||
+            (  kaiguans[12]&&(da.标注者1粗细节[3]==1&&da.标注者2粗细节[3]==1)  )||
+            (  kaiguans[13]&&(da.标注者1粗细节[4]==1&&da.标注者2粗细节[4]==1)  )||
+            (  kaiguans[14]&&(da.标注者1粗细节[2]==1&&da.标注者2粗细节[2]==1)  )||
+            (  kaiguans[15]&&((da.标注者1粗细节[3]==1||da.标注者2粗细节[3]==1)&&(da.标注者1粗细节[4]==1||da.标注者2粗细节[4]==1))  )
+            ' class="container card-wrap py-1">
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col col-12 col-md-12">
+                        <div>
+                            <p>【文件{{da.文件id}}-原句{{da.原句id}}-替换词{{da.替换词序号}}-替换句{{da.替换句序号}}】<br>{{da.句子内容}}</p>
+                            <p>【{{da.标注者1}}】<span class="badge" :class="{'badge-danger':da.标注者1初判断==1,'badge-success':da.标注者1初判断==2,'badge-warning':da.标注者1初判断==4,'badge-secondary':(da.标注者1初判断==0||da.标注者1初判断==-1)}">{{tag_map_1[da.标注者1初判断]}}</span><span v-if="da.标注者1初判断==2">，{{tag_map_2[da.标注者1判断类型]}}</span><span v-if="da.标注者1初判断==1||da.标注者1初判断==4"><span v-if="da.标注者1细节.isDaPeiBuDang">，搭配问题（“{{da.标注者1细节.text_1_1}}”，“{{da.标注者1细节.text_1_2}}”）</span><span v-if="da.标注者1细节.isYuYiChongTu">，语义问题（“{{da.标注者1细节.text_2_1}}”，“{{da.标注者1细节.text_2_2}}”）</span><span v-if="da.标注者1细节.isChangShiError">，常识问题（“{{da.标注者1细节.text_4_1}}”，“{{da.标注者1细节.text_4_2}}”）</span><span v-if="da.标注者1细节.isYuJingError">，语境问题（“{{da.标注者1细节.text_5_1}}”，“{{da.标注者1细节.text_5_2}}”）</span><span v-if="da.标注者1细节.isQiTa">，其他问题（{{da.标注者1细节.text_3}}）</span></span></p>
+                            <p>【{{da.标注者2}}】<span class="badge" :class="{'badge-danger':da.标注者2初判断==1,'badge-success':da.标注者2初判断==2,'badge-warning':da.标注者2初判断==4,'badge-secondary':(da.标注者2初判断==0||da.标注者2初判断==-1)}">{{tag_map_1[da.标注者2初判断]}}</span><span v-if="da.标注者2初判断==2">，{{tag_map_2[da.标注者2判断类型]}}</span><span v-if="da.标注者2初判断==1||da.标注者2初判断==4"><span v-if="da.标注者2细节.isDaPeiBuDang">，搭配问题（“{{da.标注者2细节.text_1_1}}”，“{{da.标注者2细节.text_1_2}}”）</span><span v-if="da.标注者2细节.isYuYiChongTu">，语义问题（“{{da.标注者2细节.text_2_1}}”，“{{da.标注者2细节.text_2_2}}”）</span><span v-if="da.标注者2细节.isChangShiError">，常识问题（“{{da.标注者2细节.text_4_1}}”，“{{da.标注者2细节.text_4_2}}”）</span><span v-if="da.标注者2细节.isYuJingError">，语境问题（“{{da.标注者2细节.text_5_1}}”，“{{da.标注者2细节.text_5_2}}”）</span><span v-if="da.标注者2细节.isQiTa">，其他问题（{{da.标注者2细节.text_3}}）</span></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col col-12 col-md-12">
+                        <div v-for="v, k in da"><p>【{{k}}】{{v}}</p></div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+
+</div>
+
+    <script type="text/javascript" src="dist/vue_2.6.10_.min.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/d3/5.12.0/d3.min.js"></script> -->
+
+    <script type="text/javascript" src="dist/FileSaver.js"></script>
+    <script type="text/javascript" src="js/statistics.js"></script>
+
+    <script type="text/javascript">
+        // document.getElementById("do_import").onclick = onImport;
+        // document.getElementById("do_export").onclick = onExport;
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>空间关系理解数据标注</title>
+
+    <link href="dist/bootstrap_4.3.1_.min.css" rel="stylesheet">
+    <style type="text/css">
+        body{background: #eee;}
+        .bodywrap{min-height: 100vh;}
+        .container.page{background: #fff;}
+        .hidden{display: none;}
+        .m0{margin: 0;}
+        .form-control{border: 1px solid #eee;}
+        .progress-bar{transition: all 0.5s;}
+        .btn{transition: all 0.5s; margin: 1px;}
+        /*#footer{padding-bottom: 5rem;}*/
+        .container{transition: max-width 1s, width 1s;}
+    </style>
+    <style type="text/css">
+        .card-wrap{margin: 1rem 0; padding: 1rem 1rem; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; transition: all 0.5s;}
+        .card{margin: 1rem 0; padding: 0.4rem 1rem; border: 1px solid #f6f6f6; border-radius: 6px;}
+        .card p{margin-bottom:0;}
+        /*.card-wrap.done{color: #6c757d; background: #fff; opacity: 0.5;}*/
+        .cluster-box{margin: 1rem 0; border: 1px solid #eee; border-radius: 6px;}
+        .cluster-wrap{margin: 1rem 0; padding: 0.01rem 1rem; max-height: 46vh; overflow-y: auto; background: #fefefe; border: 1px solid #eee; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2) inset; transition: max-height 1s;}
+        .cluster-wrap>.card{border: 1px solid #666;}
+    </style>
+    <style type="text/css">
+        @media print{
+            body{background: #fff; min-width:0 !important;}
+            .container{min-width:0 !important;}
+            .bodywrap{max-width: 100%;}
+            .page{max-width: 100%;}
+            blockquote, pre{page-break-inside: initial;}
+            .navbar{display: none;}
+            #page-import{display: none;}
+            #page-stage{display: none;}
+            #page-items-1{display: none;}
+            #page-items-2{display: none;}
+        }
+    </style>
+    <style type="text/css">
+        .text-example{/*max-height: 60vh; min-height: 60vh; */margin: 0.5em 0; padding: 0.5em 1em; font-size: inherit; background: #fafafa; color: inherit; white-space: pre-wrap; overflow: auto; border: 1px solid #eee; border-radius: 6px;}
+        .quotation{text-decoration:underline; color:#006;}
+        .frag-input{border-radius: 3px; border: 1px solid #eee; padding: 0 1px; margin: 0 1px; max-width: 4em; min-width: 1em;}
+        .frag-isEntity{color: steelblue;}
+        .frag-substitutable{color: #fa0;}
+        .frag-substitutable.frag-notSpatial{color: #666;}
+        .frag-changed{color: red;}
+        .frag-changed.frag-bert{color: red; background: yellow;}
+        .close-word{margin: 0 2px; padding: 0 2px; background: #eee; border-radius: 3px;}
+        .my-1 .disabled-input {
+            cursor: not-allowed;
+            border: 1px solid #f3f3f3;
+            border-top: 1px solid #ced4da;
+            border-bottom: 1px solid #ced4da;
+            background-color: #f3f3f3;
+        }
+        mark.new{background: #ffc;}
+    </style>
+
+
+</head>
+
+<body>
+
+<div class="bodywrap" id="bodywrap">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">空间关系理解数据标注</a>
+    </nav>
+
+    <div class="container page my-4 hiddent" id="page-import">
+        <form name="file-form" class="container py-2">
+            <div class="row" id="filePicker">
+                <!-- <label for="file-input" class="col-md-2 my-2 col-form-label text-md-right">选择文件：</label> -->
+                <div class="col-md-8 my-2">
+                    <input type="file" class="form-control" name="file-input" id="file-input" multiple="multiple" accept=".json, .md, .txt" />
+                </div>
+                <div class="btn-group col-md-4 my-2">
+                    <button type="button" name="do_import" id="do_import" v-on:click="onImport" class="btn btn-primary">导入</button>
+                    <button type="button" name="do_export" id="do_export" v-on:click="onExport" class="btn btn-info">导出</button>
+                    <button v-if="showLoadLocalStorage" type="button" name="do_localStorage" id="do_localStorage" v-on:click="readDataFromLocalStorage" class="btn btn-success">加载缓存数据</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container page my-4 hiddent" id="page-stage"><div class="container py-2">
+        <div class="row">
+                <div class="col-md-12 my-2">
+                    <input class="form-control form-control-sm" type="text" v-model="worker" placeholder="请在此输入姓名">
+                </div>
+            <div class="btn-group col-12 my-2">
+                <button type="button" v-on:click="stage(1)" class="btn" :class="meta.stage==1?'btn-primary':'btn-light'">标注</button>
+                <button type="button" v-on:click="stage(2)" class="btn" :class="meta.stage==2?'btn-primary':'btn-light'">出题</button>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+        <div class="row" :class="{'hidden': meta.stage!=1}">
+            <div class="col">
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" :style="`width: ${done_pct};`" :aria-valuenow="done_num" aria-valuemin="0" :aria-valuemax="total_num">{{ done_num }}/{{ total_num }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row" :class="{'hidden': meta.stage!=2||true}">
+            <div class="col-2">
+                <span>问题拟定进度</span>
+            </div>
+            <div class="col-10 my-2">
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" :style="`width: ${question_done_pct};`" :aria-valuenow="question_done_num" aria-valuemin="0" :aria-valuemax="question_total_num">{{ question_done_num }}/{{ question_total_num }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row" :class="{'hidden': meta.stage!=2||true}">
+            <div class="col-2">
+                <span>答案拟定进度</span>
+            </div>
+            <div class="col-10 my-2">
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" :style="`width: ${done_pct1};`" :aria-valuenow="done_num1" aria-valuemin="0" :aria-valuemax="total_num1">{{ done_num1 }}/{{ total_num1 }}</div>
+                </div>
+            </div>
+        </div>
+    </div></div>
+
+    <div class="container page my-4 py-2 hiddent" id="page-doc-1" :class="{'hidden': meta.stage!=1}"><div class="container py-3">
+        <div class="row">
+            <div class="col">
+<h4 class="my-3">空间关系理解评测数据标注操作说明</h4>
+<p>2021-02-09</p>
+<p> </p>
+<blockquote class="text-example">建议大家在标注工作期间，<br>（1）对一组替换句，先通看一遍，确定没有“弃用”的情况，没有对句中某个词语的用法和意义有误解之后，再逐句进行标注。<br>（2）标注一定量的句子后，稍微休息1-2两分钟，再进行接下来的标注。这样，可以避免因疲劳、注意力不集中，受到上下句的干扰而造成误判。</blockquote>
+<p> </p>
+<h5>0、工作准备</h5>
+<ul>
+<li>0-1、在文件选择框中选择要标注的json文件，点击「导入」。</li>
+<li>0-2、在下方的文本框中填写自己的姓名。</li>
+<li>0-3、点击「标注」按钮，展开下方标注工作页面。</li>
+<li>0-4、查阅进度条下方的工作说明兼公告栏，检查是否有高亮标出的更新内容，以便及时对工作细节进行调整。</li>
+</ul>
+<p> </p>
+<h5>1、检查原句</h5>
+<ul>
+<li>1-1、逐一检查每个原句，存在以下情况的，应标记为“弃用”：<ul>
+        <li>（1）存在较明显的语病；</li>
+        <li>（2）句子不完整，有明显的成分缺失；</li>
+        <li>（3）原句语义难以理解；</li>
+        <li>（4）原句是文言文体；</li>
+        <li>（5）原句用语习惯与现代汉语差异太大；</li>
+        <li>（6）和其他句子重复；</li>
+        <li>（7）错别字较多。（如果原句只有个别错别字，请在该原句对应的备注框中说明；<strong>如果该错别字影响标注结果，则请及时告知工作人员</strong>，以便通知到与您标注同一个文件的人员。）</li></ul>
+</li>
+<li>1-2、对于每个原句，逐一检查其中的黄色词语，如果发现它在句中并不是空间方位词汇（如方位词、处所词、趋向动词、空间介词、空间指示代词等），或者并不表示空间方位意义，则点击它，使其颜色变为灰色。<br>例如：“走出十余里后”的“后”表时间义，不表空间义，因此点击它，把它变成灰色；相应的替换句也会自动减少。<br><mark>又如：“在我<strong>底</strong>记忆中”的“底”是早期现代汉语文本中的“的”，不是方位词，应该标灰。</mark><br>如果所有黄色词都不是空间方位相关的词，则点击「弃用」。<blockquote class="text-example">注：<mark class="new">句中可能有些表示空间方位的词没有被标记出来，请大家不用在意。</mark>目前标黄的词是经过筛选的，如果把它掩蔽之后机器能够简单地猜中，那么就不会被标出，因此大家会看到一些相关词语未被标注的情况。</blockquote></li>
+</ul>
+<h5>2、标注替换句</h5>
+<ul>
+<li>2-1、逐个阅读替换后的句子，判断标为红色的词语与周围词语搭配是否恰当、语义上是否连贯合理，在「不成立」「勉强成立」「成立」这几个按钮中选择并点击。<br>请注意明确：“成立”“不成立”“勉强成立”3个选项中，<mark class="new"><strong>“勉强成立”不是居于中间，而是偏“不成立”一端。也就是说，是首先感觉到“不成立”，但从宽容的角度考虑，从表达多样性的角度考虑，从别人也许会觉得还行的角度考虑，这样，最终选择“勉强成立”的。</strong></mark><br>【<mark>平时不会这么说 → 不成立 → 但或许有人会这么说吧 → 勉强成立</mark>】<blockquote class="text-example">请大家特别注意：
+（1）句子S“不成立”的判断标准：自己肯定不说S，估计别人也不可能说S；假如有人说S，我听到后，会觉得意思不能理解，或显然错误。
+（2）句子S“勉强成立”的判断标准：自己不说或基本不说S，但估计可能有人会说S；假如有人说S，我听到后，大致上能理解意思，但是感觉“脑补”很花时间，比较费劲。</blockquote><blockquote class="text-example">请大家特别注意：
+判断一个句子“成立”“不成立”“勉强成立”时，尽量针对当前句自身进行判断，可以读两三遍，增强语感信心。尽量不受原句、上下其他“替换句”的干扰。</blockquote></li>
+<li>2-2、针对「不成立」「勉强成立」或「成立」的情形，进一步标注。<blockquote class="text-example">判断“<strong>成立</strong>”之后，需要判断替换句与原句之间的语义差异是否较大。注意：（1）判断应以整句/段话的语义为依据，而不是以替换词所在小句为依据。（2）重点考虑空间关系是否发生了变化。
+
+<mark>判断“<strong>不成立</strong>”或“<strong>勉强成立</strong>”之后，需要给出“不成立”或“勉强”的原因<strong>（可以多选）</strong>。这样做的目的是要明确指出，为什么词语替换之后，造成了“不成立”和“勉强成立”。</mark>
+
+<blockquote class="text-example">填写“不成立”和“勉强成立”的原因时，请：
+（1）按照语法原因、语义原因、语用原因（常识、上下文等）的顺序考虑；
+（2）原因是叠加关系，不是排斥关系，允许填写多项原因。而且鼓励填写多项原因（这样后续出测试题时选择余地更大）；
+（3）考虑原因时同样应该在整句范围内分析，不应局限在替换词所在小句内。比如：有时候填写 X与Y不能搭配，可能不准确。真实的情况可能是，X跟Y可以搭配，但X跟Y组合后，在整句（更大上下文）中跟其他信息冲突，或者跟常识冲突。</blockquote>
+
+“不成立”的原因模板：
+
+1）不成立→「_____ 与 _____ 无法搭配」：
+　　词汇之间几乎不会这样搭配使用的，选此项。
+　　例如：1990年，村上出了名的穷户老符家喜从天降，孩子希尧考上安徽农学院。可两口子又愁开了：<span style="color:red">出哪去</span>凑这个盘缠？
+        不成立的原因：【<span class="quotation">出</span> 与 <span class="quotation">哪去</span> 无法搭配】
+
+2）不成立→「_____ 与 _____ 语义严重冲突」：
+　　词汇语义上存在无法解释的冲突，选此项。
+　　例如：当金蒲惊恐万状地张开双手哭喊着<span style="color:red">从浓烟外</span><span style="color:red">跑出来</span>的时候，美联社记者尼克拍下了这触目惊心的一幕。当时在场的人立即摘下水壶，把凉水倒在金蒲烧伤的皮肤上。金蒲昏了过去，人们七手八脚地把她送进了附近的一家医院。不少看到这一惨景的人都认为金蒲不可能活下来了。
+　　　　不成立的原因：【<span class="quotation">从……外</span> 与 <span class="quotation">跑出来</span> 语义严重冲突】
+
+3）不成立→「_____ 与常识 _____ 严重相悖」：
+　　与常识存在冲突，事实错误或几乎不可能发生，则填此项。
+　　例如：在战火纷飞的岁月里，在铁血奔流的<span style="color:red">山西战场</span>上，许世友特别倚重聂凤智。大凡指挥较大规模的战役，许世友一般情况下总是把主攻任务交给聂凤智率领的部队去完成。
+　　　　不成立的原因：【<span class="quotation">山西战场</span> 与常识 <span class="quotation">许世友并未指挥山西战场的作战</span> 严重相悖】
+　　又如：开戏前，我布置了四名卫士把守大门，二十名卫士在学校四周作流动哨，其余的分散到坝子四周担任警戒。我和内卫尹中富则坐在张国焘<span style="color:red">头顶</span>，与他寸步不离。
+　　　　不成立的原因：【<span class="quotation">坐在张国焘头顶</span> 与常识 <span class="quotation">执行安保工作不应坐在他人头顶</span> 严重相悖】
+
+4）不成立→「_____ 与上下文中的描述 _____ 严重相悖」：
+　　上下文之间存在无法相容的陈述，填此项。
+　　例如：孩子希尧<span style="color:red">考上安徽农学院</span>。可两口子又愁开了：上哪去凑这个盘缠？亏了这家里还有一条值钱的耕牛，狠狠心，卖了供孩子<span style="color:red">出合肥念大学</span>。
+　　　　不成立的原因：【<span class="quotation">出合肥念大学</span> 与上下文中的描述 <span class="quotation">考上安徽农学院</span> 严重相悖】
+　　又如：他们多么想立即走到刘亚楼的病榻跟前，把他从可怕的病魔深渊中<span style="color:red">拉进来</span>，可是翟云英制止了他们，她怕丈夫看到孩子们不经他批准就偷偷来，不高兴，精神上会受刺激，对身体不利。
+　　　　不成立的原因：【<span class="quotation">拉进来</span> 与上下文中的描述 <span class="quotation">从可怕的病魔深渊中</span> 严重相悖】
+
+5）不成立→「其他 _____」：如果无法按照上述模板解释，则填此项。
+　　请<mark>注意「“XX”词语不能用来替换“YY”词语」这种表述不是原因</mark>。
+
+
+“勉强成立”的原因模板：
+
+1）勉强成立→「_____ 与 _____ 不宜搭配」：
+　　词汇之间很少这样搭配使用，但是勉强说得通的，可填此项。
+　　例如：当那女孩子站在一个小凳子上，去为我取钩上货物时，铺柜里<span style="color:red">火盆</span><span style="color:red">右</span>有茶壶沸水产音，某一处有人吸烟声音。
+　　　　勉强成立的原因：【<span class="quotation">火盆</span> 与 <span class="quotation">右</span> 不宜搭配】
+
+2）勉强成立→「_____ 与 _____ 语义不和谐」：
+　　语义上过于具体、不够具体、不够精确、视角混乱、莫名其妙等，但勉强能够解释得通，可填此项。
+　　例如：湘江？毛泽东叨念着，从担架上坐了起来，举目望去，<span style="color:red">右边</span>仍蒙蒙的一片，山林树木影子似地立在四周，队伍稀稀拉拉地前行着。
+　　　　勉强成立的原因：【<span class="quotation">右边</span> 与 <span class="quotation">举目望去</span> 语义不和谐】
+　　又如：他们多么想立即走到刘亚楼的病榻跟前，把他从可怕的病魔深渊中<span style="color:red">拉起来</span>，可是翟云英制止了他们，她怕丈夫看到孩子们不经他批准就偷偷来，不高兴，精神上会受刺激，对身体不利。
+　　　　勉强成立的原因：【<span class="quotation">拉起来</span> 与 <span class="quotation">从可怕的病魔深渊中</span> 语义不和谐】
+　　又如：只有在丈夫昏迷时，才让孩子们偷偷来到他的病床前，平时只能<span style="color:red">隔着病房里的屏风的缝隙往旁边看</span>。
+　　　　勉强成立的原因：【<span class="quotation">隔着病房里的屏风的缝隙</span> 与 <span class="quotation">往旁边看</span> 语义不和谐】
+
+3）勉强成立→「_____ 与常识 _____ 有一定冲突」：
+　　与常识存在冲突，但仍有一定可能性，可填此项。
+　　例如：出了松柏林子，前面路的<span style="color:red">正中</span>参天的杉木笔直的对立着，我正想这些树顶准可擎云了。
+　　　　勉强成立的原因：【<span class="quotation">前面路的正中参天的杉木</span> 与常识 <span class="quotation">路中间一般不种树</span> 有一定冲突】
+
+4）勉强成立→「_____ 与上下文中的描述 _____ 不和谐」：
+　　上下文之间的陈述怪异、不自然，不太会有这种情形发生等，可填此项。
+　　例如：开往天津的快车还有二十多分钟才开车。她低着头，立在相当长的一队旅客的<span style="color:red">旁边</span>。她的脊背上时时爬动着一股凉气，手心上出了凉汗。她不敢想别的，只盼身后赶快来人，好把她挤在中间，有点掩饰。
+　　　　勉强成立的原因：【<span class="quotation">只盼身后赶快来人</span> 与上下文中的描述 <span class="quotation">立在相当长的一队旅客的旁边</span> 不和谐】
+
+5）勉强成立→「其他 _____」：如果无法按照上述模板解释，则填此项。
+　　请<mark>注意「“XX”词语不能用来替换“YY”词语」这种表述不是原因</mark>。
+
+
+注：
+1）不成立或勉强成立的原因，其逻辑顺序为：（1）语法原因；（2）语义原因；（3）百科知识（语用）；（4）语境知识（语用）；（5）其他。这种分类相对概括，具体的原因需要很多下位的模板描述（比如叙述视角的冲突造成句子不成立），在当前标注中不容易全面考虑和体现。
+2）以上工作标准仍是一种倾向性的意见，大家的标注结果还是可能出现不一致，这些不一致的标注结果并不会浪费，而是会成为我们后续进一步制作测试集的数据基础。</blockquote></li>
+<li>2-3、如果有标错的地方，可点击「重置」按钮重新标注。</li>
+<li>2-4、填写过程中有任何问题、意见，或需要做笔记，可在原句所在框最下方的文本框中填写。</li>
+</ul>
+<h5>3、数据导出与提交</h5>
+<ul>
+<li>3-1、如标注完成或临时离开，则点击页面最上方「导出」按钮来导出数据。<strong>导出前请务必检查姓名是否填写。</strong></li>
+<li>3-2、标注完成并导出文件后，检查最终文件名命名是否为“空间关系理解-{自动文档编号}-[标注]-{姓名}--{自动时间戳}.json”的格式，如“空间关系理解-5-[标注]-张三--210205-182300.json”。如果文件名有误，则手动修改文件名为此格式。</li>
+<li>3-3、将文件提交给工作人员。</li>
+</ul>
+            </div>
+        </div>
+    </div></div>
+
+    <div class="container page my-4 py-2" id="page-items-1" :class="{'hidden': meta.stage!=1}"><div v-for="dataItem in data" class="container card-wrap py-1">
+        <div class="container card">
+            <div class="row my-1">
+                <div class="col col-12 col-md-8">
+                    <div v-if="!dataItem.isCorrecting"><p>【原句】【编号{{ dataItem.itemId+1 }}】<span v-for="frag in dataItem.originalSentence" class="frag" :class="{'frag-substitutable': frag.substitutable, 'frag-isEntity': frag.isEntity, 'frag-notSpatial': frag.notSpatial}" v-on:click="changeSpatial(frag, dataItem)" :data-pos="frag.POSTag">{{frag.word}}</span></p></div>
+                    <div v-if="dataItem.isCorrecting"><p><input v-for="frag in dataItem.originalSentence" type="text" class="frag-input" v-model="frag.word"></p></div><!--
+                    <div><p v-for="cluster in dataItem.clusters">【{{cluster.id}}】<span v-for="changed in cluster.changed">（{{changed.idx}}, {{changed.from}}）</span></p></div> -->
+                </div>
+                <div class="col col-12 col-md-4">
+                    <div><p><button type="button" v-on:click="dataItem.originalError = !dataItem.originalError; if(dataItem.originalError){dataItem.showSentences=false;};" class="btn btn-sm" :class="dataItem.originalError? 'btn-danger':'btn-light'">{{ dataItem.originalError? '状态：弃用':'状态：正常' }}</button> <!-- <button type="button" v-on:click="dataItem.isCorrecting = !dataItem.isCorrecting" class="btn btn-sm btn-light" :class="{'hidden':dataItem.originalError}">{{ dataItem.isCorrecting? '结束勘误':'开始勘误' }}</button></p><p> --><button type="button" v-on:click="dataItem.showSentences = !dataItem.showSentences" class="btn btn-sm" :class="{'hidden':dataItem.originalError, 'btn-primary':dataItem.showSentences, 'btn-info':!dataItem.showSentences}">{{ dataItem.showSentences? '收起替换句':'列出替换句' }}({{dataItem.sentencesLength}})</button></p></div>
+                </div>
+            </div>
+        </div>
+        <div v-for="cluster in dataItem.clusters" v-if="!cluster.dropped" class="container cluster-box" :class="{'hidden':dataItem.originalError||!dataItem.showSentences}">
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col col-12">
+                        <div>
+                            <p>以下是【第{{+cluster.id+1}}个被替换词 <span v-for="changed in cluster.changed">“{{changed.from}}” </span>】对应的替换句。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container cluster-wrap">
+                <div v-for="changes_obj in dataItem.changesObjects" v-if="changes_obj.clusterId==cluster.id&&!changes_obj.dropped" class="container card" :class="{'hidden':dataItem.originalError||!dataItem.showSentences}">
+                    <div class="row my-1">
+                        <div class="col col-12 col-lg-6">
+                            <div><p>【{{ changes_obj.docIdx+1 }}】<span v-for="frag in changes_obj.sentence" class="frag" :class="{'frag-substitutable': frag.substitutable, 'frag-isEntity': frag.isEntity, 'frag-notSpatial': frag.notSpatial, 'frag-changed': frag.changed, 'frag-bert': frag.bert}" :data-pos="frag.POSTag" :title="frag.changed?'原词：'+frag.word_origin+' '+frag.POSTag:frag.POSTag">{{frag.word}}</span></p></div>
+                        </div>
+                        <div class="col col-12 col-lg-6">
+                            <div>
+                                <p v-if="changes_obj.judgeCorrection!=-1">{{tag_map_1[+changes_obj.judgeCorrection]}}<span v-if="changes_obj.judgeType!=-1&&changes_obj.judgeType!=6&&changes_obj.judgeType!=7">，{{tag_map_2[+changes_obj.judgeType]}}
+                                    </span><span v-if="changes_obj.judgeType==6">，原因是：<span v-if="changes_obj.whyNot.isDaPeiBuDang"><br>“{{changes_obj.whyNot.text_1_1}}”与“{{changes_obj.whyNot.text_1_2}}”无法搭配</span> <span v-if="changes_obj.whyNot.isYuYiChongTu"><br>“{{changes_obj.whyNot.text_2_1}}”与“{{changes_obj.whyNot.text_2_2}}”语义冲突</span> <span v-if="changes_obj.whyNot.isChangShiError"><br>“{{changes_obj.whyNot.text_4_1}}”与常识“{{changes_obj.whyNot.text_4_2}}”严重相悖</span> <span v-if="changes_obj.whyNot.isYuJingError"><br>“{{changes_obj.whyNot.text_5_1}}”与上下文中的描述“{{changes_obj.whyNot.text_5_2}}”严重相悖</span> <span v-if="changes_obj.whyNot.isQiTa"><br>{{changes_obj.whyNot.text_3}}</span></span><span v-if="changes_obj.judgeType==7">，原因是：<span v-if="changes_obj.whyNot.isDaPeiBuDang"><br>“{{changes_obj.whyNot.text_1_1}}”与“{{changes_obj.whyNot.text_1_2}}”不宜搭配</span> <span v-if="changes_obj.whyNot.isYuYiChongTu"><br>“{{changes_obj.whyNot.text_2_1}}”与“{{changes_obj.whyNot.text_2_2}}”语义不和谐</span> <span v-if="changes_obj.whyNot.isChangShiError"><br>“{{changes_obj.whyNot.text_4_1}}”与常识“{{changes_obj.whyNot.text_4_2}}”有一定冲突</span> <span v-if="changes_obj.whyNot.isYuJingError"><br>“{{changes_obj.whyNot.text_5_1}}”与上下文中的描述“{{changes_obj.whyNot.text_5_2}}”不和谐</span> <span v-if="changes_obj.whyNot.isQiTa"><br>{{changes_obj.whyNot.text_3}}</span></span></p>
+                                <p><button type="button" v-if="changes_obj.judgeCorrection==-1" v-on:click="judge(changes_obj, [1, -1])" class="btn btn-sm btn-danger">不成立</button>
+                                   <button type="button" v-if="changes_obj.judgeCorrection==-1" v-on:click="judge(changes_obj, [4, -1])" class="btn btn-sm btn-warning">勉强成立</button>
+                                   <button type="button" v-if="changes_obj.judgeCorrection==-1" v-on:click="judge(changes_obj, [2, -1])" class="btn btn-sm btn-success">成立</button><!--
+                                   <button type="button" v-if="changes_obj.judgeCorrection==-1" v-on:click="judge(changes_obj, [0, 0])" class="btn btn-sm btn-secondary">难以判断</button> --><!--
+                                   <button type="button" v-if="changes_obj.judgeCorrection==1&&changes_obj.judgeType==-1" v-on:click="judge(changes_obj, [1, 1])" class="btn btn-sm btn-danger">搭配不合适</button>
+                                   <button type="button" v-if="changes_obj.judgeCorrection==1&&changes_obj.judgeType==-1" v-on:click="judge(changes_obj, [1, 2])" class="btn btn-sm btn-danger">意义冲突</button> -->
+                                   <div v-if="(changes_obj.judgeCorrection==1||changes_obj.judgeCorrection==4)&&changes_obj.judgeType==-1">
+                                       <form @submit.prevent="judge_2(changes_obj)">
+    <div class="input-group my-1">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><input type="checkbox" v-model="changes_obj.whyNot.isDaPeiBuDang"></span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isDaPeiBuDang}" :disabled="!changes_obj.whyNot.isDaPeiBuDang" :required="changes_obj.whyNot.isDaPeiBuDang" v-model="changes_obj.whyNot.text_1_1">
+      <div class="input-group-prepend input-group-append">
+        <span class="input-group-text">与</span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isDaPeiBuDang}" :disabled="!changes_obj.whyNot.isDaPeiBuDang" :required="changes_obj.whyNot.isDaPeiBuDang" v-model="changes_obj.whyNot.text_1_2">
+      <div class="input-group-append">
+        <span class="input-group-text">{{changes_obj.judgeCorrection==1?"无法搭配":"不宜搭配"}}</span>
+      </div>
+    </div>
+    <div class="input-group my-1">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><input type="checkbox" v-model="changes_obj.whyNot.isYuYiChongTu"></span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isYuYiChongTu}" :disabled="!changes_obj.whyNot.isYuYiChongTu" v-model="changes_obj.whyNot.text_2_1">
+      <div class="input-group-prepend input-group-append">
+        <span class="input-group-text">与</span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isYuYiChongTu}" :disabled="!changes_obj.whyNot.isYuYiChongTu" v-model="changes_obj.whyNot.text_2_2">
+      <div class="input-group-append">
+        <span class="input-group-text">{{changes_obj.judgeCorrection==1?"语义冲突":"语义不和谐"}}</span>
+      </div>
+    </div>
+    <div class="input-group my-1">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><input type="checkbox" v-model="changes_obj.whyNot.isChangShiError"></span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isChangShiError}" :disabled="!changes_obj.whyNot.isChangShiError" v-model="changes_obj.whyNot.text_4_1">
+      <div class="input-group-prepend input-group-append">
+        <span class="input-group-text">与常识</span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isChangShiError}" :disabled="!changes_obj.whyNot.isChangShiError" v-model="changes_obj.whyNot.text_4_2">
+      <div class="input-group-append">
+        <span class="input-group-text">{{changes_obj.judgeCorrection==1?"严重相悖":"有一定冲突"}}</span>
+      </div>
+    </div>
+    <div class="input-group my-1">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><input type="checkbox" v-model="changes_obj.whyNot.isYuJingError"></span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isYuJingError}" :disabled="!changes_obj.whyNot.isYuJingError" v-model="changes_obj.whyNot.text_5_1">
+      <div class="input-group-prepend input-group-append">
+        <span class="input-group-text">与上下文中的描述</span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isYuJingError}" :disabled="!changes_obj.whyNot.isYuJingError" v-model="changes_obj.whyNot.text_5_2">
+      <div class="input-group-append">
+        <span class="input-group-text">{{changes_obj.judgeCorrection==1?"严重相悖":"不和谐"}}</span>
+      </div>
+    </div>
+    <div class="input-group my-1">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><input type="checkbox" v-model="changes_obj.whyNot.isQiTa">其他：</span>
+      </div>
+      <input type="text" class="form-control" :class="{'disabled-input': !changes_obj.whyNot.isQiTa}" :disabled="!changes_obj.whyNot.isQiTa" v-model="changes_obj.whyNot.text_3">
+    </div>
+                                            <p><button type="submit" class="btn btn-sm btn-light" >保存</button></p>
+                                        </form>
+                                   </div>
+                                   <button type="button" v-if="changes_obj.judgeCorrection==2&&changes_obj.judgeType==-1" v-on:click="judge(changes_obj, [2, 3])" class="btn btn-sm btn-success">语义变化不大</button>
+                                   <button type="button" v-if="changes_obj.judgeCorrection==2&&changes_obj.judgeType==-1" v-on:click="judge(changes_obj, [2, 4])" class="btn btn-sm btn-success">语义变化大</button>
+                                   <button type="button" v-if="changes_obj.judgeCorrection!=-1" v-on:click="judge(changes_obj, [-1, -1])" class="btn btn-sm btn-light">重置</button></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <textarea class="form-control form-control-sm mb-4" rows="2" v-model="dataItem.feedback1" placeholder="您可在此备注信息或记录反馈意见"></textarea>
+            </div>
+        </div>
+    </div></div>
+
+    <!-- <div class="container page my-4 py-2 hiddent" id="page-feedback-1" :class="{'hidden': meta.stage!=1}">
+    </div> -->
+
+    <!-- <div class="container page my-4 py-2 hiddent" id="page-doc-2" :class="{'hidden': meta.stage!=2||true}">
+        <div class="row">
+            <div class="col">
+                <p>二、标注完成后，开始【出题】：</p>
+                <p><mark>注意：请务必标注完成后再出题，不要在出题后修改标注，否则可能导致出好的题消失！</mark></p>
+                <p>1、首先，筛选材料（M）：</p>
+                <p>　　从标注好的语料中，选择3到5个适合出题的原句。必要条件：</p>
+                <p>　　a. <mark>对于原句而言：有至少一个满足条件的待替换词（黄词）。</mark></p>
+                <p>　　b. <mark>对于待替换词（黄词）而言：有至少一个语义变化大的替换词（红词）。</mark></p>
+                <p>2、然后，拟定问题（Q）：</p>
+                <p>2.1、一个原句会有若干个待替换词（黄色词），每个待替换词对应1个句组（红色词位置一样的一组句子），每个句组出1个问题。每人出满10个问题即可，出更多题目则更好。</p>
+                <p>2.2、围绕句中实体（蓝色词）之间的空间关系来出「选择题」。</p>
+                <p>2.3、具体的问题由出题人自行拟定，要求：待替换词被替换后，会造成问题的答案的改变。</p>
+                <p>　　例如，待替换词被替换后，可能会造成以下情况：</p>
+                <p>　　a. 原句中实体词（蓝色词）间的空间位置关系发生改变，例如“灵柩里边”的“里边”被替换为“外边”“下边”等词时，就极有可能造成空间位置关系发生改变。</p>
+                <p>　　b. 原句叙事视角的变化，例如“滚出去”的“出去”被替换为“出来”“进去”等词时，就极有可能造成叙事视角的变化。</p>
+                <p>　　于是就可以以此为根据，拟定如下问题（Q）：</p>
+                <p>　　a. 灵柩里边有什么？</p>
+                <p>　　b. 这段景物描写，观察者的视角在哪里?</p>
+                <p>　　除了上面两种情况外，还有许多情况，请大家多多挖掘。</p>
+                <p>3、最后，确定答案（A）：</p>
+                <p>3.1、一个句组中的每个句子都需要单独拟定答案。</p>
+                <p>3.2、答案由一个正确答案，和若干干扰答案组成。答案应该以实体词或空间方位表达为主。</p>
+                <p>3.3、干扰答案需要满足以下要求：</p>
+                <p>　　a. 在空间认知逻辑上，其正确的概率要远低于正确答案；</p>
+                <p>　　b. 在统计上，要具有干扰性。可以参考【选项参考词】，也可以自行拟定其他具有干扰性的选项。</p>
+                <p>3.4、“E、材料信息不足。”和 “F、材料语义不成立。” 两个选项是固定选项。</p>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="container page my-4 py-2" id="page-items-2" :class="{'hidden': meta.stage!=2||true}"><div v-for="dataItem in data" v-if="!dataItem.originalError&&dataItem.branchLength>0" class="container card-wrap py-1">
+        <!-- <div class="container card">
+            <div class="row my-1">
+                <div class="col col-8">
+                    <div><p>【原句】【编号{{ dataItem.itemId+1 }}】<span v-for="frag in dataItem.originalSentence" class="frag" :class="{'frag-substitutable': frag.substitutable, 'frag-isEntity': frag.isEntity, 'frag-notSpatial': frag.notSpatial}" :data-pos="frag.POSTag" :title="frag.POSTag">{{frag.word}}</span></p></div>
+                </div>
+                <div class="col col-4">
+                    <div><p><button type="button" v-on:click="dataItem.showSentences2 = !dataItem.showSentences2" class="btn btn-sm" :class="{'hidden':dataItem.originalError, 'btn-primary':dataItem.showSentences2, 'btn-info':!dataItem.showSentences2}">{{ dataItem.showSentences2? '收起':'展开' }}({{dataItem.newSentencesLength}})</button></p></div>
+                </div>
+            </div>
+        </div>
+        <div class="container card" :class="{'hidden':!dataItem.showSentences2}">
+            <div class="row my-1">
+                <div class="col col-12">
+                    <div>
+                        <p>提示：这个原句共有【{{dataItem.newBranchLength}}个替换词】，也就产生了【{{dataItem.newBranchLength}}组，共{{dataItem.newSentencesLength}}句替换句】，可出【{{dataItem.newBranchLength}}道题】。</p>
+                        <p>出题设计选项时可参考的候选词有：<span v-for="frag in dataItem.originalSentence" v-if="frag.closeWords&&frag.closeWords.length" class="close-words"><span v-for="word in frag.closeWords" class="close-word">{{word}}</span>；</span></p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div v-for="cluster in dataItem.clusters" v-if="!cluster.dropped&&!cluster.neglect" class="container cluster-box" :class="{'hidden':!dataItem.showSentences2}">
+            <div class="container card">
+                <div class="row my-1">
+                    <div class="col col-12">
+                        <div>
+                            <!--<p>请为【第{{+cluster.id+1}}个被替换词 <span v-for="changed in cluster.changed">“{{changed.from}}” </span>】对应的替换句出题<small>（关于实体之间空间关系的选择题，使得不同材料不同答案。）</small>。</p>-->
+                            <p>请为【被替换词 <span v-for="changed in cluster.changed">“{{changed.from}}” </span>】对应的替换句出题<small>（关于实体之间空间关系的选择题，使得不同材料不同答案。）</small>。</p>
+                            <textarea class="form-control form-control-sm" v-model="cluster.question" rows="2" :data-v="cluster.question"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="container cluster-wrap">
+                <div class="container card" :class="{'hidden':!dataItem.showSentences2}">
+                    <div class="row my-1">
+                        <div class="col col-12 col-md-7">
+                            <div><p>【原句】<span v-for="frag in dataItem.originalSentence" class="frag" :class="{'frag-substitutable': frag.substitutable, 'frag-isEntity': frag.isEntity, 'frag-notSpatial': frag.notSpatial}" :data-pos="frag.POSTag" :title="frag.POSTag">{{frag.word}}</span></p></div>
+                        </div>
+                        <div class="col col-12 col-md-5">
+                            <div>
+                                <div :class="{'hidden':cluster.originObject.choicesMade>0}">
+                                    <p title="首尾用英文方括号标记，每个选项用英文引号包裹，选项之间用英文逗号隔开">请设置选项：</p>
+                                    <textarea class="form-control form-control-sm" v-model="cluster.originObject.choicesString" rows="2" :data-v="cluster.originObject.choicesString"></textarea>
+                                    <p><small>（首尾用英文方括号标记，每个选项用英文引号包裹，选项之间用英文逗号隔开）</small></p>
+                                    <p><button type="button" v-on:click="makeChoices(cluster.originObject)" class="btn btn-sm btn-primary">确定</button></p>
+                                </div>
+                                <div :class="{'hidden':cluster.originObject.choicesMade!=1}">
+                                    <p>请设置正确选项：</p>
+                                    <p><button v-for="choice in cluster.originObject.choices" type="button" class="btn btn-sm" :class="choice.isCorrect?'btn-success':'btn-light'" v-on:click="makeCorrect(choice.content, cluster.originObject)"><span v-if="choice.isCorrect">✅ </span>{{choice.content}}</button></p>
+                                    <p><button type="button" v-on:click="cluster.originObject.choicesMade=2" class="btn btn-sm btn-primary">确定</button></p>
+                                </div>
+                                <div :class="{'hidden':cluster.originObject.choicesMade!=2}">
+                                    <p><button v-for="choice in cluster.originObject.choices" type="button" class="btn btn-sm" :class="choice.isCorrect?'btn-success':'btn-info'"><span v-if="choice.isCorrect">✅ </span>{{choice.content}}</button></p>
+                                    <p><button type="button" v-on:click="cluster.originObject.choicesMade=0" class="btn btn-sm btn-light">重置</button></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-for="changes_obj in dataItem.changesObjects" v-if="changes_obj.clusterId==cluster.id&&!changes_obj.dropped&&(changes_obj.judgeType==3||changes_obj.judgeType==4)" class="container card" :class="{'hidden':!dataItem.showSentences2}">
+                    <div class="row my-1">
+                        <div class="col col-12 col-md-7">
+                            <div><p>【{{ changes_obj.docIdx+1 }}】{{ changes_obj.judgeType==4?"【语义变化明显】":"【语义变化不明显】" }}<span v-for="frag in changes_obj.sentence" class="frag" :class="{'frag-substitutable': frag.substitutable, 'frag-isEntity': frag.isEntity, 'frag-notSpatial': frag.notSpatial, 'frag-changed': frag.changed, 'frag-bert': frag.bert}" :data-pos="frag.POSTag" :title="frag.changed?'原词：'+frag.word_origin+' '+frag.POSTag:frag.POSTag">{{frag.word}}</span></p></div>
+                        </div>
+                        <div class="col col-12 col-md-5">
+                            <div>
+                                <div :class="{'hidden':changes_obj.choicesMade>0}">
+                                    <p title="首尾用英文方括号标记，每个选项用英文引号包裹，选项之间用英文逗号隔开">请设置选项：</p>
+                                    <textarea class="form-control form-control-sm" v-model="changes_obj.choicesString" rows="2"></textarea>
+                                    <p><small>（首尾用英文方括号标记，每个选项用英文引号包裹，选项之间用英文逗号隔开）</small></p>
+                                    <p><button type="button" v-on:click="makeChoices(changes_obj)" class="btn btn-sm btn-primary">确定</button></p>
+                                </div>
+                                <div :class="{'hidden':changes_obj.choicesMade!=1}">
+                                    <p>请设置正确选项：</p>
+                                    <p><button v-for="choice in changes_obj.choices" type="button" class="btn btn-sm" :class="choice.isCorrect?'btn-success':'btn-light'" v-on:click="makeCorrect(choice.content, changes_obj)"><span v-if="choice.isCorrect">✅ </span>{{choice.content}}</button></p>
+                                    <p><button type="button" v-on:click="changes_obj.choicesMade=2" class="btn btn-sm btn-primary">确定</button></p>
+                                </div>
+                                <div :class="{'hidden':changes_obj.choicesMade!=2}">
+                                    <p><button v-for="choice in changes_obj.choices" type="button" class="btn btn-sm" :class="choice.isCorrect?'btn-success':'btn-info'"><span v-if="choice.isCorrect">✅ </span>{{choice.content}}</button></p>
+                                    <p><button type="button" v-on:click="changes_obj.choicesMade=0" class="btn btn-sm btn-light">重置</button></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div></div>
+
+
+</div>
+
+    <script type="text/javascript" src="dist/vue_2.6.10_.min.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/d3/5.12.0/d3.min.js"></script> -->
+
+    <script type="text/javascript" src="dist/FileSaver.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+
+    <script type="text/javascript">
+        // document.getElementById("do_import").onclick = onImport;
+        // document.getElementById("do_export").onclick = onExport;
+    </script>
+
+</body>
+
+</html>
