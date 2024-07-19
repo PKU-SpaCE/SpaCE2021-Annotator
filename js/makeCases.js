@@ -109,6 +109,35 @@ function da2key(da) {
     return key;
 };
 
+function makeComments(file) {
+    //
+    let 实际批次 = -1;
+    let dt = file.timeString.slice(0,6);
+    switch (dt) {
+        case '210205': 实际批次 = 1; break;
+        case '210206': 实际批次 = 1; break;
+        case '210207': 实际批次 = 2; break;
+        case '210208': 实际批次 = 2; break;
+        case '210209': 实际批次 = 3; break;
+        case '210210': 实际批次 = 3; break;
+        default: 实际批次 = -1;
+    };
+    //
+    let comments = [];
+    let data = file.obj.data;
+    for (let data_item of data) {
+        if (data_item.feedback1) {
+            let comment = {
+                'yyid': `${实际批次}-${data_item.documentId}-${data_item.itemId}`,
+                'content': data_item.feedback1,
+                'person': file.worker,
+            };
+            comments.push(comment);
+        };
+    };
+    return comments;
+};
+
 function makeCases(file) {
     // let self = this;
     //
@@ -261,6 +290,7 @@ var the_vue = new Vue({
         "origin_batch_map": new Set(),
         "paired_cases": [],
         "workers_works": {},
+        "comments": [],
         "all_works": {
             origins: new Set(),
             clusters: new Set(),
@@ -355,7 +385,22 @@ var the_vue = new Vue({
                     };
                 };
             };
+            self.makeAllComments();
             self.summed = true;
+        },
+
+        makeAllComments: function() {
+            let self = this;
+            self.comments = [];
+            for (let file of self.files) {
+                if (file.isUsable && file.isInUse) {
+                    // console.log('dealing with file');
+                    let comments = makeComments(file);
+                    for (let comment of comments) {
+                        self.comments.push(comment);
+                    };
+                };
+            };
         },
 
         makeMap: function() {
@@ -379,6 +424,15 @@ var the_vue = new Vue({
             let jn = JSON.stringify(paired, null, 2);
             let time_str = self.timeString();
             let filename = `空间关系理解-paired--${time_str}.json`;
+            var file = new File([jn], (`${filename}`), { type: "text/plain; charset=utf-8" });
+            saveAs(file);
+        },
+
+        onExportComments: function() {
+            let self = this;
+            let jn = JSON.stringify(self.comments, null, 2);
+            let time_str = self.timeString();
+            let filename = `空间关系理解-comments--${time_str}.json`;
             var file = new File([jn], (`${filename}`), { type: "text/plain; charset=utf-8" });
             saveAs(file);
         },
