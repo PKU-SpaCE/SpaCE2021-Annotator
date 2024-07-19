@@ -43,94 +43,245 @@ var the_vue = new Vue({
         },
     },
     computed: {
-        替换句总数量: function(){
+        //
+        //
+        //
+        //
+        替换句总数量: function() {
             let self = this;
             let sum = self.data.length;
             return sum;
         },
-        适合评估一致性的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>da.适合评估一致性).length;
-            return sum;
-        },
-        都觉得成立的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>(da.标注者1初判断==2&&da.标注者2初判断==2)).length;
-            return sum;
-        },
-        都觉得语义变化不大的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>(da.标注者1判断类型==3&&da.标注者2判断类型==3)).length;
-            return sum;
-        },
-        都觉得语义变化大的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>(da.标注者1判断类型==4&&da.标注者2判断类型==4)).length;
-            return sum;
-        },
-        语义变化判断存在差异的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>((da.标注者1判断类型==4&&da.标注者2判断类型==3)||(da.标注者1判断类型==3&&da.标注者2判断类型==4))).length;
-            return sum;
-        },
-        都觉得不成立的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>(da.标注者1初判断==1&&da.标注者2初判断==1)).length;
-            return sum;
-        },
-        都觉得勉强成立的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>(da.标注者1初判断==4&&da.标注者2初判断==4)).length;
-            return sum;
-        },
-        分别觉得不成立和勉强成立的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1)).length;
-            return sum;
-        },
-        分别觉得不成立和勉强成立但字符串有所一致的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1)&&da.细节一致).length;
-            return sum;
-        },
-        都认为非成立且至少一个觉得勉强成立且字符串有所一致的替换句数量: function(){
-            let self = this;
-            let sum = self.data.filter(da=>(da.标注者2初判断==4||da.标注者1初判断==4)&&da.细节一致).length;
-            return sum;
-        },
-        判断题可出数量: function(){
+        判断题可出数量: function() {
             let self = this;
             let sum = self.都觉得成立的替换句数量+self.都觉得不成立的替换句数量+self.都认为非成立且至少一个觉得勉强成立且字符串有所一致的替换句数量;
             return sum;
         },
-        都觉得不成立或勉强成立的替换句数量: function(){
+        都觉得不成立或勉强成立的替换句数量: function() {
             let self = this;
             let sum = self.都觉得不成立的替换句数量+self.都觉得勉强成立的替换句数量+self.分别觉得不成立和勉强成立的替换句数量;
             return sum;
         },
-        分别觉得成立和不成立的替换句数量: function(){
+        //
+        //
+        适合评估一致性的替换句数量: function() {
             let self = this;
-            let sum = self.data.filter(da=>(da.标注者1初判断==1&&da.标注者2初判断==2||da.标注者1初判断==2&&da.标注者2初判断==1)).length;
-            return sum;
+            return self.适合评估一致性的替换句().length;
         },
-        分别觉得成立和勉强成立的替换句数量: function(){
+        都觉得成立的替换句数量: function() {
             let self = this;
-            let sum = self.data.filter(da=>(da.标注者1初判断==2&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==2)).length;
-            return sum;
+            return self.都觉得成立的替换句().length;
         },
-        粗细节一致的替换句数量: function(){
+        都觉得语义变化不大的替换句数量: function() {
             let self = this;
-            let sum = self.data.filter(da=>da.粗细节一致).length;
-            return sum;
+            return self.都觉得语义变化不大的替换句().length;
         },
-        细节一致的替换句数量: function(){
+        都觉得语义变化大的替换句数量: function() {
             let self = this;
-            let sum = self.data.filter(da=>da.细节一致).length;
-            return sum;
+            return self.都觉得语义变化大的替换句().length;
         },
-
+        语义变化判断存在差异的替换句数量: function() {
+            let self = this;
+            return self.语义变化判断存在差异的替换句().length;
+        },
+        都觉得不成立的替换句数量: function() {
+            let self = this;
+            return self.都觉得不成立的替换句().length;
+        },
+        都觉得勉强成立的替换句数量: function() {
+            let self = this;
+            return self.都觉得勉强成立的替换句().length;
+        },
+        分别觉得不成立和勉强成立的替换句数量: function() {
+            let self = this;
+            return self.分别觉得不成立和勉强成立的替换句().length;
+        },
+        分别觉得不成立和勉强成立但字符串有所一致的替换句数量: function() {
+            let self = this;
+            return self.分别觉得不成立和勉强成立但字符串有所一致的替换句().length;
+        },
+        都认为非成立且至少一个觉得勉强成立且字符串有所一致的替换句数量: function() {
+            let self = this;
+            return self.都认为非成立且至少一个觉得勉强成立且字符串有所一致的替换句().length;
+        },
+        分别觉得成立和不成立的替换句数量: function() {
+            let self = this;
+            return self.分别觉得成立和不成立的替换句().length;
+        },
+        分别觉得成立和勉强成立的替换句数量: function() {
+            let self = this;
+            return self.分别觉得成立和勉强成立的替换句().length;
+        },
+        粗细节一致的替换句数量: function() {
+            let self = this;
+            return self.粗细节一致的替换句().length;
+        },
+        细节一致的替换句数量: function() {
+            let self = this;
+            return self.细节一致的替换句().length;
+        },
+        //
+        //
     },
     methods: {
+
+        频次统计: function(项目列表) {
+            const 总字典 = {
+                原词频次统计: {},
+                替换词频次统计: {},
+                替换词对频次统计: {},
+            };
+            for (let 项目 of 项目列表) {
+                for (let 统计项 of ["原词", "替换词", "替换词对"]) {
+                    if (!(项目[统计项] in 总字典[`${统计项}频次统计`])) {
+                        总字典[`${统计项}频次统计`][项目[统计项]] = 0;
+                    };
+                    总字典[`${统计项}频次统计`][项目[统计项]] += 1;
+                }
+            };
+            for (let 统计项 of ["原词", "替换词", "替换词对"]) {
+                总字典[`${统计项}频次统计列表`] = Object.entries(总字典[`${统计项}频次统计`]).sort().sort((a, b)=> b[1]-a[1]);
+            };
+            return 总字典;
+        },
+        替换词对频次表格: function(项目列表) {
+            const 总字典 = this.频次统计(项目列表);
+            let 结果 = 总字典.替换词对频次统计列表.join('\n').replaceAll(",","\t");
+            return 结果;
+        },
+        替换词频次表格: function(项目列表) {
+            const 总字典 = this.频次统计(项目列表);
+            let 结果 = 总字典.替换词频次统计列表.join('\n').replaceAll(",","\t");
+            return 结果;
+        },
+        原词频次表格: function(项目列表) {
+            const 总字典 = this.频次统计(项目列表);
+            let 结果 = 总字典.原词频次统计列表.join('\n').replaceAll(",","\t");
+            return 结果;
+        },
+        统计项频次总字典: function(统计项) {
+            const 大字典 = {};
+            大字典.不成立频次统计 = this.频次统计(this.都觉得不成立的替换句()
+                .concat(this.都觉得勉强成立的替换句()).concat(this.分别觉得不成立和勉强成立的替换句()))
+            [`${统计项}频次统计`];
+            大字典.变化大频次统计 = this.频次统计(this.都觉得语义变化大的替换句())[`${统计项}频次统计`];
+            大字典.变化不大频次统计 = this.频次统计(this.都觉得语义变化不大的替换句())[`${统计项}频次统计`];
+            大字典.弃用频次统计 = this.频次统计(this.data.filter(x=>!x.适合评估一致性))[`${统计项}频次统计`];
+            const 汇总字典 = {};
+            for (let 类型 of ["不成立", "变化大", "变化不大", "弃用"]) {
+                for (let 条目 of Object.entries(大字典[`${类型}频次统计`])) {
+                    if (!(条目[0] in 汇总字典)) {
+                        汇总字典[条目[0]] = {"不成立频次": 0, "变化大频次": 0, "变化不大频次": 0, "弃用频次": 0};
+                    };
+                    汇总字典[条目[0]][`${类型}频次`] += 条目[1];
+                };
+            };
+            return 汇总字典;
+        },
+        替换词对频次总字典: function() {
+            const 字典 = this.统计项频次总字典("替换词对");
+            for (let 替换词对 of Object.keys(字典)) {
+                字典[替换词对].原词 = 替换词对.match(/.+(?= → )/g)[0];
+                字典[替换词对].替换词 = 替换词对.match(/(?<= → ).+/g)[0];
+            };
+            return 字典;
+        },
+        替换词频次总字典: function() {
+            return this.统计项频次总字典("替换词");
+        },
+        原词频次总字典: function() {
+            return this.统计项频次总字典("原词");
+        },
+        //
+        //
+        统计项频次总表: function(统计项) {
+            const 汇总字典 = this.统计项频次总字典(统计项);
+            let 文本列表 = [`${统计项}\t不成立频次\t变化大频次\t变化不大频次\t弃用频次\t合计`];
+            for (let 条目 of Object.entries(汇总字典)) {
+                let 一行文本 = `${条目[0]}\t${条目[1].不成立频次}\t${条目[1].变化大频次}\t${条目[1].变化不大频次}\t${条目[1].弃用频次}\t${条目[1].不成立频次+条目[1].变化大频次+条目[1].变化不大频次+条目[1].弃用频次}`;
+                文本列表.push(一行文本);
+            };
+            let 输出文本 = 文本列表.join('\n');
+            return 输出文本;
+        },
+        替换词对频次总表: function() {
+            const 汇总字典 = this.替换词对频次总字典();
+            let 文本列表 = [`替换词对\t原词\t替换词\t不成立频次\t变化大频次\t变化不大频次\t弃用频次\t合计`];
+            for (let 条目 of Object.entries(汇总字典)) {
+                let 一行文本 = `${条目[0]}\t${条目[1].原词}\t${条目[1].替换词}\t${条目[1].不成立频次}\t${条目[1].变化大频次}\t${条目[1].变化不大频次}\t${条目[1].弃用频次}\t${条目[1].不成立频次+条目[1].变化大频次+条目[1].变化不大频次+条目[1].弃用频次}`;
+                文本列表.push(一行文本);
+            };
+            let 输出文本 = 文本列表.join('\n');
+            return 输出文本;
+        },
+        替换词频次总表: function() {
+            return this.统计项频次总表("替换词");
+        },
+        原词频次总表: function() {
+            return this.统计项频次总表("原词");
+        },
+        //
+        //
+        //
+        适合评估一致性的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>da.适合评估一致性);
+        },
+        都觉得成立的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1初判断==2&&da.标注者2初判断==2));
+        },
+        都觉得语义变化不大的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1判断类型==3&&da.标注者2判断类型==3));
+        },
+        都觉得语义变化大的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1判断类型==4&&da.标注者2判断类型==4));
+        },
+        语义变化判断存在差异的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>((da.标注者1判断类型==4&&da.标注者2判断类型==3)||(da.标注者1判断类型==3&&da.标注者2判断类型==4)));
+        },
+        都觉得不成立的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1初判断==1&&da.标注者2初判断==1));
+        },
+        都觉得勉强成立的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1初判断==4&&da.标注者2初判断==4));
+        },
+        分别觉得不成立和勉强成立的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1));
+        },
+        分别觉得不成立和勉强成立但字符串有所一致的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1初判断==1&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==1)&&da.细节一致);
+        },
+        都认为非成立且至少一个觉得勉强成立且字符串有所一致的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者2初判断==4||da.标注者1初判断==4)&&da.细节一致);
+        },
+        分别觉得成立和不成立的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1初判断==1&&da.标注者2初判断==2||da.标注者1初判断==2&&da.标注者2初判断==1));
+        },
+        分别觉得成立和勉强成立的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>(da.标注者1初判断==2&&da.标注者2初判断==4||da.标注者1初判断==4&&da.标注者2初判断==2));
+        },
+        粗细节一致的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>da.粗细节一致);
+        },
+        细节一致的替换句: function() {
+            let self = this;
+            return self.data.filter(da=>da.细节一致);
+        },
+        //
+        //
+        //
 
         bang:function(tag) {
             let self = this;
@@ -228,6 +379,10 @@ var the_vue = new Vue({
             let self = this;
             let new_data = [];
             for (let da of data) {
+                //
+                da.原词 = da.句子内容.match(/(?<=【【).+(?=→)/g)[0];
+                da.替换词 = da.句子内容.match(/(?<=→).+(?=】】)/g)[0];
+                da.替换词对 = `${da.原词} → ${da.替换词}`;
                 //
                 da.存在弃用 = da.标注者1已弃用 || da.标注者2已弃用;
                 da.一人弃用 = da.标注者1已弃用 != da.标注者2已弃用;

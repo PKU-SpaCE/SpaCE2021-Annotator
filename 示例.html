@@ -1,0 +1,1056 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>示例</title><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color: #ffffff; --text-color: #333333; --select-text-bg-color: #B5D6FC; --select-text-font-color: auto; --monospace: "Lucida Console",Consolas,"Courier",monospace; --title-bar-height: 20px; }
+.mac-os-11 { --title-bar-height: 28px; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857143; overflow-x: hidden; background-image: inherit; background-size: inherit; background-attachment: inherit; background-origin: inherit; background-clip: inherit; background-color: inherit; tab-size: 4; background-position: inherit inherit; background-repeat: inherit inherit; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; word-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 36px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+.typora-export .task-list-item input { pointer-events: none; }
+@media screen and (max-width: 500px) { 
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  #write { padding-left: 20px; padding-right: 20px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+#write li > figure:last-child { margin-bottom: 0.5rem; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; image-orientation: from-image; }
+button, input, select, textarea { color: inherit; font-family: inherit; font-size: inherit; font-style: inherit; font-variant-caps: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+p { line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 4; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right-width: 0px; background-color: inherit; }
+.CodeMirror-linenumber { }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background-image: inherit; background-size: inherit; background-attachment: inherit; background-origin: inherit; background-clip: inherit; background-color: inherit; position: relative !important; background-position: inherit inherit; background-repeat: inherit inherit; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; background-position: 0px 0px; background-repeat: initial initial; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li blockquote { margin: 1rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print { 
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; font-variant-ligatures: no-common-ligatures; }
+  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  .typora-export #write { break-after: avoid; }
+  .typora-export #write::after { height: 0px; }
+  .is-mac table { break-inside: avoid; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background-color: rgb(204, 204, 204); display: block; overflow-x: hidden; background-position: initial initial; background-repeat: initial initial; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+#write.first-line-indent p > .md-image:only-child:not(.md-img-error) img { left: -2em; position: relative; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+.MathJax_ref { fill: currentcolor; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus, [contenteditable="false"]:active, [contenteditable="false"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) { 
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background-color: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; background-position: initial initial; background-repeat: initial initial; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
+code { text-align: left; }
+a.md-print-anchor { white-space: pre !important; border: none !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; text-shadow: initial !important; background-position: 0px 0px !important; background-repeat: initial initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
+.md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: hidden; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none; }
+.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; margin-top: 0px !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="flow"] svg, [lang="mermaid"] svg { max-width: 100%; height: auto; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom-width: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+mark { background-color: rgb(255, 255, 0); color: rgb(0, 0, 0); background-position: initial initial; background-repeat: initial initial; }
+.md-html-inline .md-plain, .md-html-inline strong, mark .md-inline-math, mark strong { color: inherit; }
+mark .md-meta { color: rgb(0, 0, 0); opacity: 0.3 !important; }
+@media print { 
+  .typora-export h1, .typora-export h2, .typora-export h3, .typora-export h4, .typora-export h5, .typora-export h6 { break-inside: avoid; }
+}
+.md-diagram-panel .messageText { stroke: none !important; }
+.md-diagram-panel .start-state { fill: var(--node-fill); }
+.md-diagram-panel .edgeLabel rect { opacity: 1 !important; }
+.md-require-zoom-fix foreignObject { font-size: var(--mermaid-font-zoom); }
+
+
+/*@import "night/mermaid.classic.css";*/
+
+
+.mark-page {
+    display: inline-block;
+    min-height: 1em;
+    min-width: 1em;
+    border: 1px solid #ddd;
+    color: #083;
+    /*background-color: #eefff0;*/
+    border-radius: 3px;
+    font-family: "Source Code Pro", "simsun", monospace;/* Consolas,*/
+    /*font-family: Consolas, "Liberation Mono", Courier, monospace;*/
+    padding: 2px 4px 2px 4px;
+    font-size: 0.95em;
+}
+.mark-page:after {
+    content: "p " attr(data-page-number);
+}
+
+/*
+.span-quote {
+    background: #eeffee;
+    color: #006600;
+}
+
+.span-publish {
+    background: #ffffee;
+    color: #666600;
+}
+
+.span-meeting {
+    background: #ffeeee;
+    color: #660000;
+}
+
+.span-meeting-part {
+    background: #f0eeee;
+    color: #880000;
+}
+
+.span-meeting-da {
+    background: #ffeeee;
+    color: #aa0000;
+}
+
+.span-meeting-quanhui {
+    background: #ffeeee;
+    color: #cc0000;
+}
+
+.span-date {
+    background: #dddddd;
+}
+
+.span-date-year {
+    background: #dddddd;
+    color: #000000;
+    font-weight: bold;
+}
+
+.span-date-month {
+    background: #dddddd;
+    color: #000000;
+    font-weight: bold;
+}
+
+.span-date-day {
+    background: #dddddd;
+    color: #000000;
+    font-weight: bold;
+}
+
+.span-date-season {
+    background: #dddddd;
+    color: #000000;
+    font-weight: bold;
+}
+*/
+
+
+
+
+
+/* MAIN */
+
+*, ::before, ::after {
+    -webkit-font-smoothing: subpixel-antialiased;
+    font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/**
+ * css forked from https://github.com/GitbookIO/gitbook
+ * www.gitbook.com
+ * Apache License
+ * https://github.com/GitbookIO/gitbook/blob/master/LICENSE
+ **/
+
+html {
+    /*background-color: #eee;*/
+    font-size: 14px;
+}
+
+body {
+    /*background-color: #eee;*/
+    /*font-family: "Open Sans","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    color: rgb(0, 0, 0);
+    line-height: 1.6 !important;
+}
+
+#write{
+    /*font-family: "FZYingXueS-R-GB","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    font-family: "Simsun","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /*max-width: 800px;*/
+    /*max-width: 640px;*/
+    padding: 30px 30px 30px 30px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    /*border: 2px solid #222;*/
+    margin: 0 auto 20em;
+    background: #fff;
+    /*border-radius: 5px;*/
+    /*box-shadow: 0 0px 8px rgba(0,0,0,0.1);*/
+}
+#write > ul:first-child,
+#write > ol:first-child{
+    margin-top: 30px;
+}
+
+body > *:first-child {
+    margin-top: 0 !important;
+}
+body > *:last-child {
+    margin-bottom: 0 !important;
+}
+a {
+    /*font-family: "FZJinLS-L-GB","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    /*font-family: "Source Code Pro", "simsun", monospace;*/
+    /*color: #666;*/
+    color: #0091FF;
+    text-decoration: none;
+    /*border-bottom: 1px dotted #aaa;*/
+    border-bottom: 1px dotted #0091FF;
+}
+strong {
+    /*font-family: "FZJinLS-L-GB","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    /*font-family: "Open Sans","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    color: #d63b70;
+}
+em {
+    /*font-family: "FZJinLS-L-GB","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    /*font-family: "Open Sans","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    color: #2590A6;
+}
+blockquote strong {
+    color: inherit;
+}
+blockquote em {
+    color: inherit;
+}
+h1,
+h2,
+h3 {
+    text-align: center;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Open Sans","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /*font-family: "FZJinLS-L-GB","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    position: relative;
+    margin-top: 1.4em;
+    margin-bottom: 1em;
+    /*font-weight: bold;*/
+    line-height: 1.4;
+    cursor: text;
+    color: #000;
+}
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+    /*background: url("file:///Users/air/Library/Application%20Support/images/modules/styleguide/para.png") no-repeat 10px center;*/
+    text-decoration: none;
+}
+h1 tt,
+h1 code {
+    font-size: inherit;
+}
+h2 tt,
+h2 code {
+    font-size: inherit;
+}
+h3 tt,
+h3 code {
+    font-size: inherit;
+}
+h4 tt,
+h4 code {
+    font-size: inherit;
+}
+h5 tt,
+h5 code {
+    font-size: inherit;
+}
+h6 tt,
+h6 code {
+    font-size: inherit;
+}
+h1 {
+    /*padding-bottom: .3em;*/
+    font-size: 2.0em;
+    line-height: 1.2;
+    /*border-bottom: 1px solid #eee;*/
+}
+h2 {
+   /*padding-bottom: .3em;*/
+    font-size: 1.65em;
+    line-height: 1.225;
+    /*border-bottom: 1px solid #eee;*/
+}
+h3 {
+    font-size: 1.35em;
+    line-height: 1.43;
+}
+/*h1, h2, h3 {
+    padding: 5em 0.5em;
+    background: #3ea0be;
+    color: #fff;
+}*/
+h4 {
+    font-size: 1.15em;
+}
+h5 {
+    font-size: 1em;
+}
+h6 {
+   font-size: 1em;
+    color: #777;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table{
+    margin: 0.8em 0;
+}
+li>ol,
+li>ul {
+    margin: 0 0;
+}
+hr {
+    height: 1.6em;
+    padding: 0;
+    margin: 1.6em -30px;
+    background-color: rgba(238,238,238,1);
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+    /*border-bottom: 1px solid #ddd;*/
+}
+hr.normal {
+    height: 1px;
+    padding: 0;
+    margin: 1.6em -30px;
+    background-color: rgba(238,238,238,1);
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+del {
+    opacity: 0.2;
+}
+
+body > h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+body > h1:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+body > h3:first-child,
+body > h4:first-child,
+body > h5:first-child,
+body > h6:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+a:first-child h1,
+a:first-child h2,
+a:first-child h3,
+a:first-child h4,
+a:first-child h5,
+a:first-child h6 {
+    margin-top: 0;
+    padding-top: 0;
+}
+h1 p,
+h2 p,
+h3 p,
+h4 p,
+h5 p,
+h6 p {
+    margin-top: 0;
+}
+li p.first {
+    display: inline-block;
+}
+li p {
+    margin: 0.2em 0;
+    padding: 0;
+}
+ul,
+ol {
+    padding-left: 30px;
+}
+ul:first-child,
+ol:first-child {
+    margin-top: 0;
+}
+ul:last-child,
+ol:last-child {
+    margin-bottom: 0;
+}
+blockquote {
+    border-radius: 3px;
+    border-left: 4px solid #dddddd;
+    padding: 0 15px;
+    color: #333;
+    font-size: 0.95em;
+}
+blockquote blockquote {
+    padding-right: 0;
+}
+
+
+table {
+    border-radius: 3px;
+    border-top: 2px solid #ddd;
+    border-bottom: 2px solid #ddd;
+    /*border-left: 1px solid #eee;*/
+    /*border-right: 1px solid #eee;*/
+    padding: 0;
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: auto;
+}
+table thead tr:first-child {
+    border-bottom: 2px solid #ddd;
+    background-color: #fbfbfb;
+}
+/*table tbody tr:first-child {
+    border-top: 2px solid #0f0;
+}*/
+table tr {
+    border-top: 0px solid #eee;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+table tr:nth-child(2n) {
+    background-color: #fbfbfb;
+}
+table tr th {
+    font-weight: bold;
+    border-left: 1px dotted #eee;
+    border-right: 1px dotted #eee;
+    text-align: left;
+    margin: 0;
+    padding: 0.25em 0.5em;
+}
+table tr td {
+    border-left: 1px dotted #eee;
+    border-right: 1px dotted #eee;
+    text-align: left;
+    margin: 0;
+    padding: 0.25em 0.5em;
+}
+table tr th:first-child,
+table tr td:first-child {
+    margin-top: 0;
+}
+table tr th:last-child,
+table tr td:last-child {
+    margin-bottom: 0;
+}
+table hr {
+    margin: 0.5em 0;
+}
+
+
+
+.CodeMirror-gutters {
+    border-right: 1px solid #ddd;
+}
+
+code {
+    color: #4c9969;
+}
+
+.md-fences,
+code,
+tt {
+    /*border: 1px solid #ddd;*/
+    background-color: #f7fff8;
+    border-radius: 3px;
+    font-family: "Source Code Pro", "simsun", monospace;/* Consolas,*/
+    /*font-family: Consolas, "Liberation Mono", Courier, monospace;*/
+    padding: 2px 4px 2px 4px;
+    font-size: 0.85em;
+}
+
+/*mark {
+    background: rgba(25, 201, 215, 0.05);
+    border-bottom: 1px dotted rgba(0, 164, 255, 0.5);
+}
+
+mark:hover {
+    background: rgba(25, 201, 215,0.25);
+    border-bottom: 1px solid rgba(0, 164, 255,0.8);
+}*/
+
+mark {
+    background: rgba(255, 255, 60, 0.25);
+    /*border-bottom: 1px dotted rgba(0, 164, 255, 0.5);*/
+}
+
+
+.md-fences {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding: 10px 10px;
+    /*padding: 0.2em 1em;*/
+    /*padding-top: 8px;*/
+    /*padding-bottom: 6px;*/
+}
+
+.task-list{
+	padding-left: 0;
+}
+
+.task-list-item {
+	padding-left:32px;
+}
+
+.task-list-item input {
+  top: 3px;
+  left: 8px;
+}
+
+@media screen and (min-width: 914px) {
+    /*body {
+        width: 854px;
+        margin: 0 auto;
+    }*/
+}
+@media print {
+    html {
+        /*font-size: 13px;*/
+        /*background-color: #eee;*/
+    }
+    body.typora-export {
+        padding-left: 0;
+        padding-right: 0;
+        padding: 0;
+    }
+    #write{
+        /*font-family: "FZYingXueS-R-GB","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+        font-family: "Simsun","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        max-width: 100%;
+        padding: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        /*border: 2px solid #222;*/
+        margin: 0;
+        background: #fff;
+        /*border-radius: 5px;*/
+        /*box-shadow: 0 0px 8px rgba(0,0,0,0.1);*/
+    }
+    table,
+    pre {
+        page-break-inside: avoid;
+    }
+    pre {
+        word-wrap: break-word;
+    }
+    hr {
+        height: 1px;
+        padding: 0;
+        margin: 1.6em -30px;
+        background-color: rgba(238,238,238,1);
+        border: 0 none;
+        overflow: hidden;
+        box-sizing: content-box;
+    }
+    hr.pageline {
+        background-color: rgba(238,238,238,0);
+        page-break-before: always;
+        margin-bottom: 2em;
+    }
+}
+
+.md-fences {
+	background-color: #f8f8f8;
+}
+
+.mathjax-block>.code-tooltip {
+	bottom: .375rem;
+}
+
+#write>h3.md-focus:before{
+	left: -1.5625rem;
+	top: .375rem;
+}
+#write>h4.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+#write>h5.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+#write>h6.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+.md-image>.md-meta {
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    font-family: "Source Code Pro", "simsun", monospace;/* Consolas,*/
+    /*font-family: Consolas, "Liberation Mono", Courier, monospace;*/
+    padding: 2px 4px 0px 4px;
+    font-size: 0.9em;
+    color: inherit;
+}
+
+#write p {
+    /*text-indent: 2em;*/
+}
+
+#write img {
+    max-height: 400px;
+    width: auto;
+}
+
+.md-tag{
+    color: inherit;
+}
+
+.md-toc {
+    margin-top:20px;
+    padding-bottom:20px;
+}
+
+#typora-quick-open {
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+#typora-quick-open-item {
+    background-color: #FAFAFA;
+    border-color: #FEFEFE #e5e5e5 #e5e5e5 #eee;
+    border-style: solid;
+    border-width: 1px;
+}
+
+/** focus mode */
+.on-focus-mode blockquote {
+    border-left-color: rgba(85, 85, 85, 0.12);
+}
+
+header, .context-menu, .megamenu-content, footer{
+    font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+
+sup{
+    border-radius: 0.5em;
+    padding: 1px 0.2em;
+    font-family: "Source Code Pro", "simsun", monospace;/* Consolas,*/
+    /*font-family: Consolas, "Liberation Mono", Courier, monospace;*/
+}
+
+/*sup{
+    background: #E0EFFF;
+    color: #07294C;
+}*/
+sub{
+    /*border-radius: 0.5em;*/
+    /*padding: 1px 0.2em;*/
+    font-family: "Source Code Pro", "simsun", monospace;/* Consolas,*/
+    /*font-family: Consolas, "Liberation Mono", Courier, monospace;*/
+}
+sub{
+    /*background: #E0EFFF;*/
+    /*color: #07294C;*/
+}
+
+
+
+
+/** markdown source **/
+/*.cm-s-typora-default .cm-header,
+.cm-s-typora-default .cm-property
+{
+    color: #f00;
+}
+
+.CodeMirror.cm-s-typora-default div.CodeMirror-cursor{
+    border-left: 3px solid #0f0;
+}
+
+.cm-s-typora-default .cm-comment {
+    color: #00f;
+}
+
+.cm-s-typora-default .cm-string {
+    color: #ff0
+}
+
+.cm-s-typora-default .cm-atom, .cm-s-typora-default .cm-number {
+    color: #f0f;
+    font-style: italic;
+}
+
+.cm-s-typora-default .cm-link {
+    color: #0ff;
+}
+
+.cm-s-typora-default .CodeMirror-activeline-background {
+    background: rgba(51, 51, 51, 0.72);
+}*/
+
+.cm-s-typora-default .cm-comment, .cm-s-typora-default .cm-code {
+    color: #000;
+    font-family: "Source Code Pro", "simsun", monospace;/* Consolas,*/
+}
+
+
+
+
+
+
+
+
+
+
+
+/*#write div.md-toc-tooltip {
+    background-color: #f3f2ee;
+    border: 2px solid #222;
+}*/
+
+
+
+
+
+
+
+.mac-seamless-mode content {
+    margin-top: 24px;
+}
+
+titlebar {
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    min-height: 24px;
+    z-index: 666;
+    /*box-shadow: 0 2px 2px rgba(20,20,20,0.1);*/
+    background-image: linear-gradient(to top, #ddd 0%, #fff 100%);
+}
+
+content {
+    background: #eee;
+    padding: 20px 10px;
+}
+
+
+#write pre.md-meta-block {
+    background-color: #666;
+    color: #fff;
+    /*font-weight: bolder;*/
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    /*background-color: rgba(238,238,238,1);*/
+    /*color: #aaa;*/
+    /*text-shadow: 0 1px 0 #fff;*/
+    margin-top: -30px;
+    margin-bottom: 1.6em;
+    margin-left: -30px;
+    margin-right: -30px;
+    font-size: 100%;
+    padding: 20px 30px;
+    /*padding: 20px 30px 0;*/
+    border: 0 none;
+}
+/*#write pre.md-meta-block:after {
+    display: block;
+    content: " ";
+    height: 1.6em;
+    padding: 0;
+    margin: 1.6em -30px 0;
+    margin: 0 -30px;
+    background-color: #eee;
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+}*/
+
+#write:after {
+    /*height: 4.8em;*/
+    /*border-top: 1.6em solid #eee;*/
+    /*border-bottom: 1.6em solid #eee;*/
+    display: block;
+    height: 1.6em;
+    line-height: 1.6em;
+    /*content: "-- The End --";*/
+    text-align: center;
+    font-weight: bolder;
+    /*background-color: rgba(238,238,238,1);*/
+    /*color: #ccc;*/
+    /*text-shadow: 0 1px 1px #fff;*/
+    margin-top: 1.6em;
+    margin-bottom: -30px;
+    margin-left: -30px;
+    margin-right: -30px;
+    font-size: 100%;
+    padding: 0 30px;
+    border: 0 none;
+}
+
+
+#typora-source {
+    background: #fff;
+}
+
+.mac-seamless-mode #write {
+    min-height: 0;
+}
+
+
+
+/*#write:after {
+    display: block;
+    height: 9.6em;
+    line-height: 4.8em;
+    content: "The End";
+    text-align: center;
+    font-weight: bolder;
+    background-color: #f8f8f8;
+    color: #aaa;
+    margin-top: 1.6em;
+    margin-bottom: -30px;
+    margin-left: -30px;
+    margin-right: -30px;
+    font-size: 100%;
+    padding: 1.6em 30px;
+    border: 0 none;
+    border-top: 1.6em solid #eee;
+}*/
+
+
+
+
+
+
+
+
+
+ :root {--mermaid-font-zoom:1em ;} 
+</style>
+</head>
+<body class='typora-export'>
+<div id='write'  class=''><h2><a name="审核示例" class="md-header-anchor"></a><span>审核示例</span></h2><hr /><div class='md-toc' mdtype='toc'><p class="md-toc-content" role="list"><span role="listitem" class="md-toc-item md-toc-h2" data-ref="n0"><a class="md-toc-inner" href="#审核示例">审核示例</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n5"><a class="md-toc-inner" href="#b类">B类</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n7"><a class="md-toc-inner" href="#例1-reason要符合judge2">例1 reason要符合judge2</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n46"><a class="md-toc-inner" href="#例2-从b类改为d类">例2 从B类改为D类</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n83"><a class="md-toc-inner" href="#例3-多种修改方式">例3 多种修改方式</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n124"><a class="md-toc-inner" href="#例4-text应该是完整的语法单位">例4 text应该是完整的语法单位</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n163"><a class="md-toc-inner" href="#例5-负例的reason应该无法说明问题">例5 负例的reason应该无法说明问题</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n197"><a class="md-toc-inner" href="#例6-归因片段的选取要能说明问题">例6 归因片段的选取要能说明问题</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n233"><a class="md-toc-inner" href="#例7-reason要能说明问题">例7 reason要能说明问题</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n272"><a class="md-toc-inner" href="#例8-reason不应过于简略">例8 reason不应过于简略</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n309"><a class="md-toc-inner" href="#例9-多种修改方案">例9 多种修改方案</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n376"><a class="md-toc-inner" href="#例10-负例的reason">例10 负例的reason</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n413"><a class="md-toc-inner" href="#例11-负例的reason">例11 负例的reason</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n448"><a class="md-toc-inner" href="#例12-从b类改为d类">例12 从B类改为D类</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n486"><a class="md-toc-inner" href="#例13-避免text1和text2有交集的情况">例13 避免text1和text2有交集的情况</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n524"><a class="md-toc-inner" href="#例14-多种修改方案">例14 多种修改方案</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n592"><a class="md-toc-inner" href="#例15-reason不应过于简略">例15 reason不应过于简略</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n636"><a class="md-toc-inner" href="#例16-避免出现专名">例16 避免出现专名</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n660"><a class="md-toc-inner" href="#例17-避免出现专名">例17 避免出现专名</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n672"><a class="md-toc-inner" href="#例18-reason应该能够说明问题">例18 reason应该能够说明问题</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n685"><a class="md-toc-inner" href="#例19-避免出现专名">例19 避免出现专名</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n697"><a class="md-toc-inner" href="#c类">C类</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n699"><a class="md-toc-inner" href="#例20-reason不宜过长">例20 reason不宜过长</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n734"><a class="md-toc-inner" href="#例21-reason不宜过长">例21 reason不宜过长</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n768"><a class="md-toc-inner" href="#d类">D类</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n770"><a class="md-toc-inner" href="#例22-reason要保证judge2的正确性">例22 reason要保证judge2的正确性</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n807"><a class="md-toc-inner" href="#例23-reason要保证judge2的正确性">例23 reason要保证judge2的正确性</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n844"><a class="md-toc-inner" href="#例24-常识表述应易于理解">例24 常识表述应易于理解</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n879"><a class="md-toc-inner" href="#例25-reason要保证judge2的正确性">例25 reason要保证judge2的正确性</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n914"><a class="md-toc-inner" href="#例26-常识表述应简明易懂">例26 常识表述应简明易懂</a></span><span role="listitem" class="md-toc-item md-toc-h4" data-ref="n949"><a class="md-toc-inner" href="#例27-reason应能说明问题">例27 reason应能说明问题</a></span></p></div><hr /><h3><a name="b类" class="md-header-anchor"></a><span>B类</span></h3><hr /><h4><a name="例1-reason要符合judge2" class="md-header-anchor"></a><span>例1 reason要符合judge2</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>47978</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>见没人搭话，她叹了口气，象蜗牛似的把头缩回去。“老二！咱们屋里坐吧！”祁老人往屋前让常二爷，好象屋中比院里更安全似的。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>中 → 前</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“屋前”和“咱们屋里”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>屋前</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>咱们屋里</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text2  “咱们屋里”  改为  “把头缩回去”</span>
+<span>reason相应变为：“屋前”和“把头缩回去”语义冲突。</span></p><p><strong><span>解释</span></strong><span>：</span></p><p><span>原reason：“屋前”和“咱们屋里”语义冲突</span>
+<span>可以理解为“屋前”和“屋里”语义冲突，这使得这个reason可以看作是正例（true），而不是负例（false）。</span>
+<span>为了使reason成为负例，修改text2，变为“把头缩回去”。</span>
+<span>reason相应变为：“屋前”和“把头缩回去”语义冲突。</span></p><p><span>这个reason本身语义不成立，同时也不能解释context为何不成立。</span></p><p><span>text2的修改不是唯一的，还可以选择其他片段。不过，要求不能离text1太远。</span></p><hr /><h4><a name="例2-从b类改为d类" class="md-header-anchor"></a><span>例2 从B类改为D类</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>48304</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>“怎么不叫我去呢？”说着，他进了屋中。一眼看到地上的情景，他差点跳下来：“什么？钱先生！”。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>起来 → 下来</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“跳下来”和“看到地上的情景”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>跳下来</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>看到地上的情景</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>问题</span></strong><span>：reason： “跳下来”和“看到地上的情景”语义冲突</span>
+<span>但是 text1 和 text2 并没有明显的语义冲突，因此，无法作为合理的归因（true reason）</span></p><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>改为D类reason</span>
+<span>text1：跳下来</span>
+<span>text2：一个人在屋里，无法从地面上再往下跳</span></p><p><span>修改后的reason：“跳下来”与常识不符：“一个人在屋里，无法从地面上再往下跳”</span></p><hr /><h4><a name="例3-多种修改方式" class="md-header-anchor"></a><span>例3 多种修改方式</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>48322</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>“怎么不叫我去呢？”说着，他进了屋中。一眼看到地上的情景，他差点跳进去：“什么？钱先生！”。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>起来 → 进去</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“跳进去”和“看到地上的情景”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>跳进去</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>看到地上的情景</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>问题</span></strong><span>：</span>
+<span>reason：“跳进去”和“看到地上的情景”语义冲突</span>
+<span>但是 text1 和 text2 并没有明显的语义冲突，因此，无法作为合理的归因（true reason）</span></p><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>改为C类reason</span>
+<span>text1：跳进去</span>
+<span>text2：他进了屋中</span></p><p><span>修改后的reason：“跳进去”与上下文“他进了屋中”存在信息冲突</span></p><p><strong><span>第2种修改方法</span></strong><span>：</span></p><p><span>改为D类reason</span>
+<span>text1：跳进去</span>
+<span>text2：人从某处跳进某个容器，需要在上下文中明确表达出终点位置</span></p><p><span>修改后的reason：“跳进去”与常识不符：“人从某处跳进某个容器，需要在上下文中明确表达出终点位置”</span></p><p><strong><span>解释</span></strong>
+<span>这个reason也可以归入C类，但因为C类要求text1和text2必须是原文片段，而原文中没有合适的片段可以填入text2，因此，选择归入D类reason，D类reason的常识（text2）可以自由填写表达常识语义的句子。</span></p><hr /><h4><a name="例4-text应该是完整的语法单位" class="md-header-anchor"></a><span>例4 text应该是完整的语法单位</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>48628</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>拿着点简单的礼物，他直接的去拜访新街坊了。小文夫妇住的是两间东房，外间是客厅，内间是卧室；卧室的门上挂着张很干净的白布帘子。客厅里除了一张茶几，两三个小凳之外，差不多没有什么东西。墙上的银花纸已有好几张脱落下来的。墙外上放着两三根藤子棍。这每一项东西说明了屋中为什么这样简单——便于练武把子。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>墙角 → 墙外</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“墙外”和“项东西”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>墙外</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>项东西</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>问题</span></strong><span>：text2  “项东西”是错误的表达形式，需要修改。</span></p><p><strong><span>修改</span></strong><span>：</span></p><p><span>text2： “一项东西”</span></p><p><span>修改后reason：“墙外”和“一项东西”语义冲突</span></p><p><strong><span>备注</span></strong><span>：程序把这里的“项”识别为人名（姓）了，因此提示这道题的text中可能存在人名。这是程序误报的提示信息。审核人员不应受这个误报信息的干扰。应该把审核和修改的注意力放在reason本身的语义理解上。</span></p><hr /><h4><a name="例5-负例的reason应该无法说明问题" class="md-header-anchor"></a><span>例5 负例的reason应该无法说明问题</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>49095</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>他们正谈到这里，瑞丰从院中跑出来，小顺儿在下面追着喊：“我也去！二叔！我也去！”。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>后面 → 下面</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“在下面”和“谈到这里”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>在下面</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>谈到这里</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>处理意见</span></strong><span>：不需要修改</span>
+<strong><span>解释</span></strong><span>：reason：“在下面”和“谈到这里”语义冲突</span>
+<span>reason句子本身没有问题</span>
+<span>reason不是context不成立的合理解释，因此属于 false reason</span></p><hr /><h4><a name="例6-归因片段的选取要能说明问题" class="md-header-anchor"></a><span>例6 归因片段的选取要能说明问题</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>52569</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>开往天津的快车还有二十多分钟才开车。她低着头，立在相当长的一队旅客的外边。她的脊背上时时爬动着一股凉气，手心上出了凉汗。她不敢想别的，只盼身后赶快来人，好把她挤在中间，有点掩饰。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>后边 → 外边</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“立在相当长的一队旅客的外边”和“只盼身后赶快来人”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>立在相当长的一队旅客的外边</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>只盼身后赶快来人</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text2 修改为：只盼身后赶快来人，好把她挤在中间</span>
+<span>修改后reason变为：“立在相当长的一队旅客的外边”和“只盼身后赶快来人，好把她挤在中间”语义冲突</span></p><p><strong><span>解释</span></strong><span>：</span>
+<span>“立在一队旅客的外边”跟“盼身后赶快来人”之间并不冲突，而是跟“来人”之后想达到的目的“把她挤在中间”冲突。因此，text2应该扩展为“只盼身后赶快来人，好把她挤在中间”。</span></p><hr /><h4><a name="例7-reason要能说明问题" class="md-header-anchor"></a><span>例7 reason要能说明问题</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>52858</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>韵梅已觉出脸上的疼痛，可是咬上牙，点了点头。还捂着眼，她迷迷糊糊地往家中走。走到家门口，她的腿反倒软起来，一下子坐在了阶石上。把手拿进来，她看见了自己的血。这时候，热汗杀得她的伤口生疼，像撒上了一些细盐。一咬牙，她立起来，走进院中。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>下来 → 进来</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“捂着眼”和“进院中”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>捂着眼</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>进院中</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text2：改为“拿进来”</span></p><p><span>reason：“捂着眼”和“拿进来”语义冲突</span></p><p><strong><span>解释</span></strong><span>：原text1和text2中均不包含替换词语“进来”。修改后，text2中包含“进来”，</span>
+<span>且reason不适合作为context不成立的解释原因。</span></p><blockquote><p><strong><span>注</span></strong><span>：通常来说，B类的text1和text2至少其一应该与替换词在同一个小句里，但并不严格要求其中包含替换词。</span></p></blockquote><hr /><h4><a name="例8-reason不应过于简略" class="md-header-anchor"></a><span>例8 reason不应过于简略</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>3454</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>当晚两人便在茅屋上歇宿。李文秀找些枯草，在厅上做了个睡铺，睡梦之中接连惊醒了几次，不是梦到突然给强人捉住，便是见到血淋淋的恶鬼来向自己索命。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>中 → 上</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“茅屋上”和“厅上”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>茅屋上</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>厅上</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text1：在茅屋上歇宿</span>
+<span>text2：在厅上做了个睡铺</span></p><p><span>reason：“在茅屋上歇宿”和“在厅上做了个睡铺”语义冲突</span></p><p><strong><span>解释</span></strong><span>：原reason表述过于简略，起到了提示原因的作用，但不明确，不清楚。</span>
+<span>修改之后，reason表述更为明确，减少争议。</span>
+<span>“在茅屋上歇宿”和“在厅上做了个睡铺”语义冲突，可以解释context不成立。</span></p><hr /><h4><a name="例9-多种修改方案" class="md-header-anchor"></a><span>例9 多种修改方案</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>54493</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>“我跟钱先生和老三已经多日不见了，我不能上那小庙里去，我怀疑金三。那天他忽然跑来看我，到底是什么意思？要是钱先生又让人给逮了去，日本人准会把明月留在庙里当诱饵，好逮老三和别的人。我上这儿去很不方便，你敢不敢去走一趟？”。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>那儿 → 这儿</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“去”和“上这儿”不宜搭配</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>去</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>上这儿</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>A</span></td></tr></tbody></table></figure><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>54494</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>“我跟钱先生和老三已经多日不见了，我不能上那小庙里去，我怀疑金三。那天他忽然跑来看我，到底是什么意思？要是钱先生又让人给逮了去，日本人准会把明月留在庙里当诱饵，好逮老三和别的人。我上这儿去很不方便，你敢不敢去走一趟？”。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>那儿 → 这儿</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“上这儿”和“去”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>上这儿</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>去</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改意见</span></strong><span>：</span></p><p><span>上面两个context一样，reason的意思也基本一样，一个reason归入A类，一个归入B类。</span>
+<span>不需要修改。</span></p><hr /><h4><a name="例10-负例的reason" class="md-header-anchor"></a><span>例10 负例的reason</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>54903</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>这时四下里唿哨声均已止歇，马匹也不再行走，一个七八百人的市集出鸦雀无声，本在啼哭的小儿，也给父母按住了嘴巴，不再发出声息。各人凝气屏息之中，只听得一个人喀、喀、喀的皮靴声，从西边沿着大街响将过来。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>上 → 出</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“市集出”和“这时四下里”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>市集出</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>这时四下里</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text1：市集出鸦雀无声</span>
+<span>text2：在啼哭的小儿</span></p><p><span>reason：“市集出鸦雀无声”和“在啼哭的小儿”语义冲突</span></p><p><strong><span>解释</span></strong><span>：字面上，“市集出鸦雀无声”和“在啼哭的小儿”中包含的”鸦雀无声“跟”啼哭“有冲突，但这个不是context不成立的原因。</span></p><hr /><h4><a name="例11-负例的reason" class="md-header-anchor"></a><span>例11 负例的reason</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>54941</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>这时四下里唿哨声均已止歇，马匹也不再行走，一个七八百人的市集顶鸦雀无声，本在啼哭的小儿，也给父母按住了嘴巴，不再发出声息。各人凝气屏息之中，只听得一个人喀、喀、喀的皮靴声，从西边沿着大街响将过来。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>上 → 顶</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“市集顶”和“这时四下里”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>市集顶</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>这时四下里</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text1：市集顶鸦雀无声</span>
+<span>text2：在啼哭的小儿</span>
+<span>修改后 reason：“市集顶鸦雀无声”和“在啼哭的小儿”语义冲突</span></p><p><span>与例10类似。</span></p><hr /><h4><a name="例12-从b类改为d类" class="md-header-anchor"></a><span>例12 从B类改为D类</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>55974</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>那少年半点声息也发不出来，过了半晌，见窗子缓缓开了，人影一闪，跃进一个身披斑衣的汉子。这人抢后边来，见那少年坐在床上，不由得一惊，眼前情景大出他意料之外，急退了两步。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>近前 → 后边</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“后边”和“眼前情景”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>后边</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>眼前情景</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text1：这人抢后边来</span></p><p><span>text2：人要观察清楚，一般应靠近观察对象</span></p><p><span>reason：”这人抢后边来“与常识不符：”人要观察清楚，一般应靠近观察对象“</span></p><p><span>修改后，reason转为D类型</span></p><hr /><h4><a name="例13-避免text1和text2有交集的情况" class="md-header-anchor"></a><span>例13 避免text1和text2有交集的情况</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>73837</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>汽笛响了，孩子从睡中醒了；同时这个作母亲的也好像从什么梦境上醒觉了。把孩子抱了起来，让他立在她的膝盖上。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>里 → 上</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“梦境上”和“从什么梦境”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>梦境上</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>从什么梦境</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text1：从什么梦境上</span></p><p><span>text2：把孩子抱了起来</span></p><p><span>修改后reason：“从什么梦境上”和“把孩子抱了起来”语义冲突</span></p><p><strong><span>解释</span></strong><span>：原text1和text2在context中可以连接成一个片段“从什么梦境上”，两个text共享一个片段“梦境”，这种情况虽然不是text1和text2有字符串包含关系，但有交集，也应该避免。</span></p><hr /><h4><a name="例14-多种修改方案" class="md-header-anchor"></a><span>例14 多种修改方案</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>79511</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>我俩就这样一个窗左，一个窗外地僵持着，一会儿，他执拗地近乎乞求地又动员我：“还是去吧，外面的夜色特别好，就去走一走。去吧，去吧！”。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>里 → 左</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“一个窗左”和“一个窗外”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>窗</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>左</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text1 改为“窗”</span>
+<span>text2 改为 “左”</span></p><p><span>reason类型改为 A</span>
+<span>修改后reason变为：“窗”和“左”不宜搭配</span></p><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>79518</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>我俩就这样一个窗右，一个窗外地僵持着，一会儿，他执拗地近乎乞求地又动员我：“还是去吧，外面的夜色特别好，就去走一走。去吧，去吧！”。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>里 → 右</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“一个窗右”和“一个窗外”语义冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>一个窗右</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>一个窗外</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>B</span></td></tr></tbody></table></figure><p><strong><span>修改意见</span></strong><span>：不作修改</span></p><p><strong><span>解释</span></strong><span>：</span>
+<span>这道题跟上面一道题基本一样。区别是上道题的“窗左”在这道题变成了“窗右”。</span>
+<span>不同人在解释这两道题中context不成立的原因时，可能会选取不同角度，既可能向上一道题那样，把原因归入A类“不宜搭配”，也可能向这道题，把原因归为B类“语义冲突”。</span>
+<span>这两道题，处理reason的方式不同，目的是体现reason的多样性。</span></p><hr /><h4><a name="例15-reason不应过于简略" class="md-header-anchor"></a><span>例15 reason不应过于简略</span></h4><p><span>【tempID】3474</span></p><p><span>【context】当晚两人便在茅屋顶歇宿。李文秀找些枯草，在厅上做了个睡铺，睡梦之中接连惊醒了几次，不是梦到突然给强人捉住，便是见到血淋淋的恶鬼来向自己索命。</span></p><p><span>【被替换词和替换词】中 → 顶</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“茅屋顶”和“厅上”语义冲突</span></p><p><span>【judge2】归因成立（true）</span></p><p><span>【text1】</span>
+<span>茅屋顶</span></p><p><span>【text2】</span>
+<span>厅上</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改方法</span></strong></p><p><span>text1：在茅屋顶歇宿</span>
+<span>text2：在厅上做了个睡铺</span>
+<span>修改后reason：“在茅屋顶歇宿”和“在厅上做了个睡铺”语义冲突</span></p><p><strong><span>解释</span></strong><span>：原reason过于简略，表义不够清晰。修改后，使整个reason的表述更明确。</span></p><p><span>【tempID】3475</span></p><p><span>【context】当晚两人便在茅屋顶歇宿。李文秀找些枯草，在厅上做了个睡铺，睡梦之中接连惊醒了几次，不是梦到突然给强人捉住，便是见到血淋淋的恶鬼来向自己索命。</span></p><p><span>【被替换词和替换词】中 → 顶</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“茅屋顶”和“歇宿”语义冲突</span></p><p><span>【judge2】归因成立（true）</span></p><p><span>【text1】</span>
+<span>茅屋顶</span></p><p><span>【text2】</span>
+<span>歇宿</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改意见</span></strong><span>：不修改</span>
+<strong><span>解释</span></strong><span>：【tempID】3475 和  【tempID】3474 两个紧邻的题，context一样，</span>
+<span>reason是从不同角度来解释context为何不成立。两个reason都是true reason，都有合理性。</span>
+<span>因此，下面这个【tempID】3475 虽然reason表述也极为简略，但语义冲突的要点已经呈现出来了。</span></p><p><span>【tempID】3476</span></p><p><span>【context】当晚两人便在茅屋顶歇宿。李文秀找些枯草，在厅上做了个睡铺，睡梦之中接连惊醒了几次，不是梦到突然给强人捉住，便是见到血淋淋的恶鬼来向自己索命。</span></p><p><span>【被替换词和替换词】中 → 顶</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“茅屋顶”和“睡梦之中”语义冲突</span></p><p><span>【judge2】归因不成立（false）</span></p><p><span>【text1】</span>
+<span>茅屋顶</span></p><p><span>【text2】</span>
+<span>睡梦之中</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改意见</span></strong><span>：不修改</span>
+<strong><span>解释</span></strong><span>：【tempID】3476 跟前两个题的context一样，但reason是false reason（前两个是true reason）。</span>
+<span>这题的reason表义基本清楚，且确实不能解释context为何不成立，因此不需要修改。</span></p><p><span>【tempID】3477</span></p><p><span>【context】当晚两人便在茅屋顶歇宿。李文秀找些枯草，在厅上做了个睡铺，睡梦之中接连惊醒了几次，不是梦到突然给强人捉住，便是见到血淋淋的恶鬼来向自己索命。</span></p><p><span>【被替换词和替换词】中 → 顶</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“茅屋顶”和“恶鬼”语义冲突</span></p><p><span>【judge2】归因不成立（false）</span></p><p><span>【text1】</span>
+<span>茅屋顶</span></p><p><span>【text2】</span>
+<span>恶鬼</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text2：找些枯草</span>
+<span>修改后reason：“茅屋顶”和“找些枯草”语义冲突</span>
+<strong><span>解释</span></strong><span>：【tempID】3477 跟前3题的context一样，跟【tempID】3476的reason一样，均为false reason。</span>
+<span>这一题的text2跟text1距离较远，text2改为“找些枯草”，跟text1相隔更近，且同样属于false reason。</span></p><hr /><h4><a name="例16-避免出现专名" class="md-header-anchor"></a><span>例16 避免出现专名</span></h4><p><span>【tempID】8759</span></p><p><span>【context】以下，便是“火烧”事件发生后一周内，周恩来与中央文革对面直接或间接较量的过程：。</span></p><p><span>【被替换词和替换词】之间 → 对面</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“中央文革对面”和“周恩来”语义冲突</span></p><p><span>【judge2】归因成立（true）</span></p><p><span>【text1】</span>
+<span>中央文革对面</span></p><p><span>【text2】</span>
+<span>周恩来</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text1：对面</span>
+<span>text2：较量</span>
+<span>修改后reason：“对面”和“较量”语义冲突</span></p><p><strong><span>解释</span></strong><span>：原text2是专名“周恩来”，需避免出现这类包含专名的reason表述。</span>
+<span>解释这一context不成立的角度，可以从“甲与乙对面”有冲突（原文是“甲与乙之间”），也可以是从“A与B较量”跟“对面”有冲突（更合理的应该是“A与B之间较量”）。为了避免reason中出现专名，可以转换表述reason的角度，从方位词与动词之间的搭配角度来表述reason。</span></p><p><span>【tempID】8760</span></p><p><span>【context】以下，便是“火烧”事件发生后一周内，周恩来与中央文革对面直接或间接较量的过程：。</span></p><p><span>【被替换词和替换词】之间 → 对面</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“周恩来”和“事件”语义冲突</span></p><p><span>【judge2】归因不成立（false）</span></p><p><span>【text1】</span>
+<span>周恩来</span></p><p><span>【text2】</span>
+<span>事件</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text1：文革对面</span>
+<span>text2：事件发生后</span>
+<span>修改后reason：“文革对面”和“事件发生后”语义冲突</span></p><p><strong><span>解释</span></strong><span>：这一题context和上一题相同。归因为false reason。存在的问题有两个：（1）text1中有专名；（2）两个text中都没有出现替换词“对面”。修改后解决了这两个问题，并维持reason为false。</span></p><hr /><h4><a name="例17-避免出现专名" class="md-header-anchor"></a><span>例17 避免出现专名</span></h4><p><span>【tempID】8772</span></p><p><span>【context】以下，便是“火烧”事件发生后一周内，周恩来与中央文革上边直接或间接较量的过程：。</span></p><p><span>【被替换词和替换词】之间 → 上边</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“中央文革上边”和“周恩来”语义冲突</span></p><p><span>【judge2】归因成立（true）</span></p><p><span>【text1】</span>
+<span>中央文革上边</span></p><p><span>【text2】</span>
+<span>周恩来</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改方法</span></strong><span>：弃用</span>
+<strong><span>解释</span></strong><span>：这个context不成立的原因更适合从违背事实的角度去表述，但很难回避其中的专名。</span></p><hr /><h4><a name="例18-reason应该能够说明问题" class="md-header-anchor"></a><span>例18 reason应该能够说明问题</span></h4><p><span>【tempID】12048</span></p><p><span>【context】走到水田的旁边，芦苇已转为黄色，小雀们在这里飞起而又在稍远处投下。就在这旁边，有一道篱笆，我们推开柴门进去。龙畦很整齐的排列着，其中有一条是北面较高中间洼下的，上面半遮芦帘。许多菊花从这帘中探头向后，呵，我的心花怒放了！。</span></p><p><span>【被替换词和替换词】外 → 后</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“向后”和“探头”语义冲突</span></p><p><span>【judge2】归因成立（true）</span></p><p><span>【text1】</span>
+<span>向后</span></p><p><span>【text2】</span>
+<span>探头</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text1：探头向后</span>
+<span>text2：从这帘中</span>
+<span>reason：“探头向后”和“从这帘中”语义冲突</span></p><p><strong><span>解释</span></strong><span>：原归因：“向后”和“探头”语义并不冲突。实际冲突的是“从帘中”跟“向后”。</span></p><hr /><h4><a name="例19-避免出现专名" class="md-header-anchor"></a><span>例19 避免出现专名</span></h4><p><span>【tempID】30000</span></p><p><span>【context】刚迈开脚步，一个声音喊他的名字，循声看见一个人，竟是黄丽！黄丽从花坛四面一丛绿草中间闪身出来，脸上晕了一片红，轻身盈步走过来，还带着一股花香。</span></p><p><span>【被替换词和替换词】后面 → 四面</span></p><p><span>【judge1】句子不成立（false）</span></p><p><span>【reason】“花坛四面”和“黄丽”语义冲突</span></p><p><span>【judge2】归因成立（true）</span></p><p><span>【text1】</span>
+<span>花坛四面</span></p><p><span>【text2】</span>
+<span>黄丽</span></p><p><span>【type】</span>
+<span>B</span></p><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text2：一丛绿草</span>
+<span>修改后reason：“花坛四面”和“一丛绿草”语义冲突</span>
+<strong><span>解释</span></strong><span>：原text2是专名，需尽量避免。另外“黄丽”跟“花坛四面”本身并不冲突。这里语义上有冲突的主要是“花坛四面”无法跟“一丛绿草”组配。</span></p><hr /><h3><a name="c类" class="md-header-anchor"></a><span>C类</span></h3><hr /><h4><a name="例20-reason不宜过长" class="md-header-anchor"></a><span>例20 reason不宜过长</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>62575</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>在省立女中，王实味是英语水平最高的老师。他与同事、教语文的张宇瑞同住在校园西南隅一个三间平房组成的教员宿舍里，两人各住两边一间，上边留下为会客室。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>中间 → 上边</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“上边留下为会客室”与上下文“他与同事、教语文的张宇瑞同住在校园西南隅一个三间平房组成的教员宿舍里”存在信息冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>上边留下为会客室</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>他与同事、教语文的张宇瑞同住在校园西南隅一个三间平房组成的教员宿舍里</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>C</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text2：一个三间平房组成的教员宿舍</span>
+<span>修改后reason：“上边留下为会客室”与上下文“一个三间平房组成的教员宿舍”存在信息冲突</span></p><p><strong><span>解释</span></strong><span>：text2原文本太长。修改后，保留了主要信息：平房组成的教员宿舍，不分上下，因此跟text1“上边留下为会客室”有冲突。</span></p><hr /><h4><a name="例21-reason不宜过长" class="md-header-anchor"></a><span>例21 reason不宜过长</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>62626</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>正在山外对着白云唱歌的薄平看到远远的山坡上走来的王实味，慌忙躲进一个山洞里，王实味满山遍野里找呀，喊呀，一直折腾到天黑，薄平就是不出来。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>山上 → 山外</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“正在山外”与上下文“正在山外对着白云唱歌的薄平看到远远的山坡上走来的王实味”存在信息冲突</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>正在山外</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>正在山外对着白云唱歌的薄平看到远远的山坡上走来的王实味</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>C</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text1：正在山外对着白云唱歌的薄平</span>
+<span>text2：看到远远的山坡上走来的王实味</span>
+<span>修改后reason：“正在山外对着白云唱歌的薄平”与上下文“看到远远的山坡上走来的王实味”存在信息冲突</span></p><hr /><h3><a name="d类" class="md-header-anchor"></a><span>D类</span></h3><hr /><h4><a name="例22-reason要保证judge2的正确性" class="md-header-anchor"></a><span>例22 reason要保证judge2的正确性</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>28999</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>信从什么地方寄来的，女士全然记不清了。眼见那根风中的蛛丝飘走了，无影了，那女士却又给了我们一线希望：她有工作日记，“文革”前她每天都记日记，说不定能从日记下寻出来。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>里 → 下</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“说不定能从日记下寻出来”不符合常识：日记内容在日记里不在日记侧面</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>说不定能从日记下寻出来</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>日记内容在日记里不在日记侧面</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>D</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text2：写日记一般用的文具叫日记本</span></p><p><span>修改后reason：“说不定能从日记下寻出来”不符合常识：写日记一般用的文具叫日记本</span></p><p><strong><span>解释</span></strong><span>：原reason中的常识中“日记内容在日记里”这一部分可以解释“说不定能从日记下寻出来”不成立。因而作为false reason不是很可靠，即便是人来判断这个reason是true，还是false，可能也存在一定的弹性。修改之后，新的常识跟text1仅有“日记”这个概念的联系，但并不能解释句中的空间关系问题。</span></p><hr /><h4><a name="例23-reason要保证judge2的正确性" class="md-header-anchor"></a><span>例23 reason要保证judge2的正确性</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>29000</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>信从什么地方寄来的，女士全然记不清了。眼见那根风中的蛛丝飘走了，无影了，那女士却又给了我们一线希望：她有工作日记，“文革”前她每天都记日记，说不定能从日记下寻出来。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>里 → 下</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“说不定能从日记下寻出来”不符合常识：日记的内容不在日记顶</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>说不定能从日记下寻出来</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>日记的内容不在日记顶</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>D</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span></p><p><span>text2：日记不一定每天都记</span></p><p><span>修改后reason：“说不定能从日记下寻出来”不符合常识：日记不一定每天都记</span></p><p><strong><span>解释</span></strong><span>：修改text2的理由同上一道题。不过这里的text2需要跟上一道题的text2有所差异，以保证两道题是不同的。因此，需要在text2的空白处填写一条“新的常识”。</span></p><hr /><h4><a name="例24-常识表述应易于理解" class="md-header-anchor"></a><span>例24 常识表述应易于理解</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>57234</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>中午时分在一处小镇上买些面条吃了，又向东行。他无牵无挂，任意漫游，走到傍晚，前面树林中露出一角黄墙，行到近处，见是一所寺观，屋宇宏伟，门前铺着一条宽阔平正的青石板路，山门下走出两个身负长剑的黄冠道人来。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>中 → 下</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“山门下走出两个身负长剑的黄冠道人来”不符合常识：人不可能从门底走出</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>山门下走出两个身负长剑的黄冠道人来</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>人不可能从门底走出</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>D</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text2：人一般不可能从门的下面走出来</span>
+<span>修改后reason：“山门下走出两个身负长剑的黄冠道人来”不符合常识：人一般不可能从门的下面走出来</span></p><p><strong><span>解释</span></strong><span>：text1中有“山门下”，text2常识改为“人一般不可能从门的下面走出来”，跟text1的关联性更强。</span>
+<span>原text2“门底”这个说法不常见，作为常识的表述不妥。常识表述应尽量平实、清晰、易于理解。</span></p><hr /><h4><a name="例25-reason要保证judge2的正确性" class="md-header-anchor"></a><span>例25 reason要保证judge2的正确性</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>79365</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>石清见城外那道冰沟有三丈来阔，不易跃过。寻常城墙外都有护城河，此处气候严寒，护城河顶河水都结成了冰，但这沟挖得极深，沟边滑溜溜地结成一片冰壁，不论人兽，掉将下去都是极难上来。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>中 → 顶</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“护城河顶河水都结成了冰”不符合常识：河水都在护城河中</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>护城河顶河水都结成了冰</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>河水都在护城河中</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>D</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text2：河水在严寒条件下会结冰</span>
+<span>修改后reason：“护城河顶河水都结成了冰”不符合常识：河水在严寒条件下会结冰</span></p><p><strong><span>解释</span></strong><span>：原reason 中常识“河水都在护城河中”在一定程度上也可以解释“护城河顶河水”有误。因此将这个reason归入 false有一定的弹性。修改后，这个reason不是context有误的真实原因，只能归入 false reason。</span></p><hr /><h4><a name="例26-常识表述应简明易懂" class="md-header-anchor"></a><span>例26 常识表述应简明易懂</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>82937</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>为了减少动静，马蹄上裹了厚厚的麻布，踩在石子路上发出令人压抑、沉闷的声响。天完全黑下来后，就只能依靠朦胧的月光和手电摸索着前进了。对于不惯走夜路的人来说，坎坷不平的羊肠小道完全是一场灾难。走了一会儿，藤原就气喘吁吁地掉在了右面。体魄强健的高田不时停下来，回过头去皱紧了眉头。跟上，快跟上，他压低嗓门催促道，声音里流露出不满。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>后面 → 右面</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“藤原就气喘吁吁地掉在了右面”不符合常识：牵着马走路，不可能掉在右面</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>藤原就气喘吁吁地掉在了右面</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>牵着马走路，不可能掉在右面</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>D</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text2：马可以走羊肠小道</span>
+<span>修改后reason：“藤原就气喘吁吁地掉在了右面”不符合常识：马可以走羊肠小道</span></p><p><strong><span>解释</span></strong><span>：原text2常识“牵着马走路，不可能掉在右面”语义有一定的模糊性，或许有人可以接受为常识，但该常识跟text1关联过于紧密，且有可能被解读为true reason。因此需要重新构造text2。新的text2更简单，语义容易理解，同时显然无法作为解释context不成立的原因，属于false reason。</span></p><hr /><h4><a name="例27-reason应能说明问题" class="md-header-anchor"></a><span>例27 reason应能说明问题</span></h4><figure><table><thead><tr><th style='text-align:right;' ><span>key</span></th><th style='text-align:left;' ><span>value</span></th></tr></thead><tbody><tr><td style='text-align:right;' ><span>【tempID】</span></td><td style='text-align:left;' ><span>852</span></td></tr><tr><td style='text-align:right;' ><span>【context】</span></td><td style='text-align:left;' ><span>前后都是滩，风把船拘在这里，不能进也不能退，好像是在个魔术师手里。我守着大病初愈的妻，不知做什么事才好。忽然黑暗的船舱出现了一道光，是外边河下从舱篷缝里射进来的；这光慢慢地移动，从舱前移到舱后，分明是那河上放光的物体从我们船后已移到船头了。这光在船舱后消逝了不久，又有一道光射到舱前，仍然是那样的移动。</span></td></tr><tr><td style='text-align:right;' ><span>【被替换词和替换词】</span></td><td style='text-align:left;' ><span>上 → 下</span></td></tr><tr><td style='text-align:right;' ><span>【judge1】</span></td><td style='text-align:left;' ><span>句子不成立（false）</span></td></tr><tr><td style='text-align:right;' ><span>【reason】</span></td><td style='text-align:left;' ><span>“外边河下”不符合常识：船被困下，人看不到外边的河的河下</span></td></tr><tr><td style='text-align:right;' ><span>【judge2】</span></td><td style='text-align:left;' ><span>归因成立（true）</span></td></tr><tr><td style='text-align:right;' ><span>【text1】</span></td><td style='text-align:left;' ><span>外边河下</span></td></tr><tr><td style='text-align:right;' ><span>【text2】</span></td><td style='text-align:left;' ><span>船被困下，人看不到外边的河的河下</span></td></tr><tr><td style='text-align:right;' ><span>【type】</span></td><td style='text-align:left;' ><span>D</span></td></tr></tbody></table></figure><p><strong><span>修改方法</span></strong><span>：</span>
+<span>text1：一道光，是外边河下从舱篷缝里射进来的</span>
+<span>text2：光源一般在河面上，不在河下</span>
+<span>修改后reason：“一道光，是外边河下从舱篷缝里射进来的”不符合常识：光源一般在河面上，不在河下</span></p><p><strong><span>解释</span></strong><span>：原reason的语义不清楚。修改text1，把context中表达语义有误的完整片段包括在内，虽然中间有一个逗号，但整个片段的语义是完整的。text2的修改内容主要是把常识内容跟text1中光源的来源错误问题关联起来，使得整个reason是正确的原因，归入true reason。</span></p><hr /><p>&nbsp;</p><p>&nbsp;</p></div>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>空间语义理解评测数据检查</title>
+
+    <link href="dist/bootstrap_4.3.1_.min.css" rel="stylesheet">
+    <style type="text/css">
+        body{background: #eee;}
+        .bodywrap{min-height: 100vh;}
+        .container.page{background: #fff;}
+        .hidden{display: none;}
+        .m0{margin: 0;}
+        .form-control{border: 1px solid #eee;}
+        .progress-bar{transition: all 0.5s;}
+        .btn{transition: all 0.5s; margin: 1px;}
+        /*#footer{padding-bottom: 5rem;}*/
+        .container{transition: max-width 1s, width 1s;}
+    </style>
+    <style type="text/css">
+        .card-wrap{margin: 1rem 0; padding: 1rem 1rem; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; transition: all 0.5s;}
+        .card{margin: 1rem 0; padding: 0.4rem 1rem; border: 1px solid #f6f6f6; border-radius: 6px;}
+        /*.card p{margin-bottom:0;}*/
+        /*.card-wrap.done{color: #6c757d; background: #fff; opacity: 0.5;}*/
+        .cluster-box{margin: 1rem 0; border: 1px solid #eee; border-radius: 6px;}
+        .cluster-wrap{margin: 1rem 0; padding: 1.5rem 1rem; max-height: 46vh; overflow-y: auto; background: #fefefe; border: 1px solid #eee; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2) inset; transition: max-height 1s;}
+        .cluster-wrap>.card{border: 1px solid #666;}
+    </style>
+    <style type="text/css">
+        @media print{
+            body{background: #fff; min-width:0 !important;}
+            .container{min-width:0 !important;}
+            .bodywrap{max-width: 100%;}
+            .page{max-width: 100%;}
+            blockquote, pre{page-break-inside: initial;}
+            .navbar{display: none;}
+            #page-import{display: none;}
+            #page-stage{display: none;}
+            #page-items-1{display: none;}
+            #page-items-2{display: none;}
+        }
+    </style>
+    <style type="text/css">
+        .text-example{/*max-height: 60vh; min-height: 60vh; */margin: 0.5em 0; padding: 0.5em 1em; font-size: inherit; background: #fafafa; color: inherit; white-space: pre-wrap; overflow: auto; border: 1px solid #eee; border-radius: 6px;}
+        .quotation{text-decoration:underline; color:#006;}
+        .frag-input{border-radius: 3px; border: 1px solid #eee; padding: 0 1px; margin: 0 1px; max-width: 4em; min-width: 1em;}
+        .frag-isEntity{color: steelblue;}
+        .frag-substitutable{color: #fa0;}
+        .frag-substitutable.frag-notSpatial{color: #666;}
+        .frag-changed{color: red;}
+        .frag-changed.frag-bert{color: red; background: yellow;}
+        .close-word{margin: 0 2px; padding: 0 2px; background: #eee; border-radius: 3px;}
+        .my-1 .disabled-input {
+            cursor: not-allowed;
+            border: 1px solid #f3f3f3;
+            border-top: 1px solid #ced4da;
+            border-bottom: 1px solid #ced4da;
+            background-color: #f3f3f3;
+        }
+        mark.new{background: #ffc;}
+    </style>
+    <style type="text/css">
+        .tips .tip {background: #ff0;}
+        .badge-danger {background: #fee; color: black;}
+        .badge-success {background: #efe; color: black;}
+        .text-input {border-radius: 3px; border: 1px solid #ccc; text-align: center;}
+        .card-checked {opacity: 0.25;}
+        .btn-light {color: #888;}
+        .text-feedback {font-size: 80%; color: #dc3545;}
+    </style>
+
+
+<style type="text/css">
+
+.bodywrap {
+    min-height: 100vh;
+}
+.container.page {
+    background: #fff;
+}
+.hidden {
+    display: none;
+}
+.outputbox {
+    font-size: 10px;
+}
+.navbar-collapse {
+    max-height: calc(90vh - 6rem);
+    overflow-y: scroll;
+}
+.modal-header, .modal-footer {
+    padding: 0.5rem 1rem;
+}
+.modal-body {
+    padding: 1.5rem 1rem;
+}
+.alert-wrap {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 2050;
+    display: none;
+    width: 360px;
+    max-width: 80vw;
+    overflow: hidden;
+    outline: 0;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to
+/* .fade-leave-active, 2.1.8 版本以下 */
+
+    {
+    opacity: 0;
+    /*display: none;*/
+}
+.modal-wrap {
+    position: fixed;
+    z-index: 1040;
+}
+.modal-fade-enter-active, .modal-fade-leave-active {
+    transition: opacity 0.5s;
+}
+.modal-fade-enter, .modal-fade-leave-to
+/* .modal-fade-leave-active, 2.1.8 版本以下 */
+
+    {
+    opacity: 0;
+    z-index: 1040;
+    /*display: none;*/
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="bodywrap" id="bodywrap">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">空间语义理解评测数据检查</a>
+    </nav>
+
+    <div class="container page my-4 hiddent" id="page-import">
+        <form name="file-form" class="container py-2">
+            <div class="row" id="filePicker">
+                <!-- <label for="file-input" class="col-md-2 my-2 col-form-label text-md-right">选择文件：</label> -->
+                <div class="col col-12 my-2">
+                    <input type="file" class="form-control" name="file-input" id="file-input" multiple="multiple" accept=".json, .md, .txt" />
+                </div>
+                <div class="btn-group col col-12 my-2">
+                    <button type="button" name="do_import" id="do_import" v-on:click="onImport" class="btn btn-sm btn-primary">导入</button>
+                    <button v-if="showLoadLocalStorage" type="button" name="do_localStorage" id="do_localStorage" v-on:click="readDataFromLocalStorage" class="btn btn-success">加载缓存数据</button>
+                    <button type="button" name="do_export" id="do_export" v-on:click="onExport" class="btn btn-sm btn-info">导出</button>
+                    <!-- <button type="button" name="do_export" id="do_export" v-on:click="onExport" class="btn btn-sm btn-info">导出-完整</button> -->
+                    <!-- <button type="button" name="do_export" id="do_export" v-on:click="onExportChecked" class="btn btn-sm btn-primary">导出-仅已审核</button> -->
+                    <!-- <button type="button" name="do_export" id="do_export" v-on:click="onExportFilted" class="btn btn-sm btn-info">导出-仅筛选部分</button> -->
+                </div>
+            </div>
+        </form>
+        <!-- <div class="row">
+            <div class="col-md-12 my-2">
+                <p>如果没有全部审核完，请导出完整文件，下次再导入该文件继续审核；如果已经审核完成，请导出“仅审核”文件，进行提交。</p>
+            </div>
+        </div> -->
+    </div>
+
+    <div class="container page my-4 hiddent" id="page-stage"><div class="container py-2">
+        <div class="row">
+            <div class="col-md-12 my-2">
+                <input class="form-control form-control-sm" type="text" v-model="checker" placeholder="请在此输入姓名">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 my-2">
+                <a target="_blank" href="https://coding-pages-bucket-425390-8293871-12483-492623-1258188646.cos-website.ap-hongkong.myqcloud.com/%E6%96%87%E6%A1%A3.html" class="btn btn-sm btn-danger">查看文档</a> <a target="_blank" href="https://coding-pages-bucket-425390-8293871-12483-492623-1258188646.cos-website.ap-hongkong.myqcloud.com/%E7%A4%BA%E4%BE%8B.html" class="btn btn-sm btn-danger">查看示例</a> <!-- <button type="button" v-on:click="toggle_modal('G')" class="btn btn-sm btn-danger">查看文档</button> --> <button type="button" v-on:click="show_filter=1-show_filter" class="btn btn-sm btn-light">{{show_filter?"收起筛选器":"打开筛选器"}}</button>
+            </div>
+        </div>
+        <div class="row" v-if="show_filter">
+            <div class="col-12 my-2">
+                <button type="button" v-on:click="bang(0)" class="btn btn-sm" :class="{'btn-success':kaiguans[0], 'btn-light':!kaiguans[0]}">A类</button>
+                <button type="button" v-on:click="bang(1)" class="btn btn-sm" :class="{'btn-success':kaiguans[1], 'btn-light':!kaiguans[1]}">B类</button>
+                <button type="button" v-on:click="bang(2)" class="btn btn-sm" :class="{'btn-success':kaiguans[2], 'btn-light':!kaiguans[2]}">C类</button>
+                <button type="button" v-on:click="bang(3)" class="btn btn-sm" :class="{'btn-success':kaiguans[3], 'btn-light':!kaiguans[3]}">D类</button>
+                <!-- <button type="button" v-on:click="bang(4)" class="btn btn-sm" :class="{'btn-success':kaiguans[4], 'btn-light':!kaiguans[4]}">E类</button> -->
+            </div>
+        </div>
+        <div class="row" v-if="show_filter">
+            <div class="col-12 my-2">
+                <button type="button" v-on:click="bang(21)" class="btn btn-sm" :class="{'btn-primary':kaiguans[21], 'btn-light':!kaiguans[21]}">句子成立</button>
+                <button type="button" v-on:click="bang(22)" class="btn btn-sm" :class="{'btn-primary':kaiguans[22], 'btn-light':!kaiguans[22]}">句子不成立</button>
+            </div>
+        </div>
+        <div class="row" v-if="show_filter">
+            <div class="col-12 my-2">
+                <button type="button" v-on:click="bang(23)" class="btn btn-sm" :class="{'btn-primary':kaiguans[23], 'btn-light':!kaiguans[23]}">归因成立</button>
+                <button type="button" v-on:click="bang(24)" class="btn btn-sm" :class="{'btn-primary':kaiguans[24], 'btn-light':!kaiguans[24]}">归因不成立</button>
+            </div>
+        </div>
+        <div class="row" v-if="show_filter">
+            <div class="col-12 my-2">
+                <button type="button" v-on:click="bang(5)" class="btn btn-sm" :class="{'btn-info':kaiguans[5], 'btn-light':!kaiguans[5]}">代词问题</button>
+                <button type="button" v-on:click="bang(6)" class="btn btn-sm" :class="{'btn-info':kaiguans[6], 'btn-light':!kaiguans[6]}">人名问题</button>
+                <button type="button" v-on:click="bang(7)" class="btn btn-sm" :class="{'btn-info':kaiguans[7], 'btn-light':!kaiguans[7]}">包含问题</button>
+                <button type="button" v-on:click="bang(8)" class="btn btn-sm" :class="{'btn-info':kaiguans[8], 'btn-light':!kaiguans[8]}">困惑符号</button>
+                <button type="button" v-on:click="bang(9)" class="btn btn-sm" :class="{'btn-info':kaiguans[9], 'btn-light':!kaiguans[9]}">少见符号</button>
+                <button type="button" v-on:click="bang(10)" class="btn btn-sm" :class="{'btn-info':kaiguans[10], 'btn-light':!kaiguans[10]}">断句符号</button>
+                <button type="button" v-on:click="bang(11)" class="btn btn-sm" :class="{'btn-info':kaiguans[11], 'btn-light':!kaiguans[11]}">省略符号</button>
+                <button type="button" v-on:click="bang(12)" class="btn btn-sm" :class="{'btn-info':kaiguans[12], 'btn-light':!kaiguans[12]}">配对符号</button>
+                <button type="button" v-on:click="bang(13)" class="btn btn-sm" :class="{'btn-info':kaiguans[13], 'btn-light':!kaiguans[13]}">词性少见1</button>
+                <button type="button" v-on:click="bang(14)" class="btn btn-sm" :class="{'btn-info':kaiguans[14], 'btn-light':!kaiguans[14]}">词性少见2</button>
+                <button type="button" v-on:click="bang(15)" class="btn btn-sm" :class="{'btn-info':kaiguans[15], 'btn-light':!kaiguans[15]}">字数太多1</button>
+                <button type="button" v-on:click="bang(16)" class="btn btn-sm" :class="{'btn-info':kaiguans[16], 'btn-light':!kaiguans[16]}">字数太多2</button>
+                <button type="button" v-on:click="bang(17)" class="btn btn-sm" :class="{'btn-info':kaiguans[17], 'btn-light':!kaiguans[17]}">不在文中1</button>
+                <button type="button" v-on:click="bang(18)" class="btn btn-sm" :class="{'btn-info':kaiguans[18], 'btn-light':!kaiguans[18]}">不在文中2</button>
+                <button type="button" v-on:click="bang(19)" class="btn btn-sm" :class="{'btn-info':kaiguans[19], 'btn-light':!kaiguans[19]}">这是C2</button>
+                <button type="button" v-on:click="bang(20)" class="btn btn-sm" :class="{'btn-info':kaiguans[20], 'btn-light':!kaiguans[20]}">常识负例</button>
+                <button type="button" v-on:click="bang(27)" class="btn btn-sm" :class="{'btn-info':kaiguans[27], 'btn-light':!kaiguans[27]}">常识小修</button>
+                <button type="button" v-on:click="bang(28)" class="btn btn-sm" :class="{'btn-success':kaiguans[28], 'btn-light':!kaiguans[28]}">无问题的</button>
+                <button type="button" v-on:click="bang(25)" class="btn btn-sm" :class="{'btn-success':kaiguans[25], 'btn-light':!kaiguans[25]}">不论有无问题</button>
+                <button type="button" v-on:click="allReason" class="btn btn-sm btn-secondary">全选</button>
+                <button type="button" v-on:click="noneReason" class="btn btn-sm btn-secondary">全不选</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 my-2">
+                <p>已筛选出{{filted_num}}个题目</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" :style="`width: ${done_pct};`" :aria-valuenow="done_num" aria-valuemin="0" :aria-valuemax="total_num">{{ done_num }}/{{ filted_num }}</div>
+                </div>
+            </div>
+        </div>
+    </div></div>
+
+
+    <div ref="wrap" class="container page my-4 py-2" id="page-items-1" :class="{'hidden': meta.stage!=1}"><div v-for="_qu_ in data" class="container card-wrap py-1" v-if="condition(_qu_)||(noProblem(_qu_)&&kaiguans[28])">
+        <div class="container card">
+            <div class="row my-1" :class="_qu_.control.checked?'card-checked':'card-not-checked'">
+                <div class="col col-12 tips">
+                    <!-- x -->
+                    <div class="alert alert-info" v-if="_qu_.type=='A'">A类：<br>① text1、text2必须是原文片段，通常为简短的词或词组。text2中应该包含替换词。<br>② 正例中，text1、text2不能搭配，主要是因为语法、韵律、习惯等因素，通常不会这样说，而不是因为它们语义不兼容（如“爬到”与“出来”）。<br>③ 负例中，text1、text2通常是可以搭配的（如“爬”与“出来”），或者由于关系比较远，一般并不讨论它们是否可以搭配（如“屋顶”与“到”）。<!-- <br><button type="button" v-on:click="toggle_modal('A')" class="btn btn-sm btn-info">查看示例</button> --></div>
+                    <div class="alert alert-info" v-if="_qu_.type=='B'">B类：<br>① text1、text2必须是原文片段，通常为简短的词或词组。通常来说，text1和text2至少其一应该与替换词在同一个小句里。建议在text1或text2中包含替换词，但并不严格要求。<br>② 正例中，text1、text2通常不一起使用，主要是因为它们语义通常不兼容，而不是因为语法、韵律、习惯等因素。<br>③ 负例中，text1或text2本身可能存在某些错误，但它们至少应该是完整的词语或短语。<!-- <br><button type="button" v-on:click="toggle_modal('B')" class="btn btn-sm btn-info">查看示例</button> --></div>
+                    <div class="alert alert-info" v-if="_qu_.type=='C'">C类：<br>① text1、text2必须是原文片段，可以是简短的词或词组，也可以是相对较长的表达形式。text1中应该包含替换词。<br>② 正例中，text1、text2之间存在冲突，主要是因为在当前语境中，具体信息存在冲突，而不是因为二者语义不兼容。<br>③ 负例中，可能存在的情况有：(1) text1、text2的信息并无冲突。<!-- <br><button type="button" v-on:click="toggle_modal('C')" class="btn btn-sm btn-info">查看示例</button> --></div>
+                    <div class="alert alert-info" v-if="_qu_.type=='D'">D类：<br>① text1必须是原文片段，且应包含替换词；text2是对常识的描述，并且text2这个常识与原文内容必须有一定关联。<br>② 正例中，text2描述的常识能够说明text1存在的问题。<br>③ 负例中，可能存在的情况有：(1) text2可以是错误的常识。(2) text2是正确的常识，但text1与它并无冲突（即整个reason不是context不成立的原因）。<!-- <br><button type="button" v-on:click="toggle_modal('D')" class="btn btn-sm btn-info">查看示例</button> --></div>
+                    <div class="alert alert-info" v-if="_qu_.type=='E'">E类<br><button type="button" v-on:click="toggle_modal('E')" class="btn btn-sm btn-info">查看示例</button></div>
+                    <!-- <div class="alert alert-info" v-if="kaiguans[25]">请做基本检查。</div> -->
+                    <!-- x -->
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '代词问题')">⚠️ 请检查text，其中可能存在不宜作为题目内容的代词，请尝试调整。</div>
+                    <!-- x -->
+                    <div class="alert alert-primary" v-if="judge(_qu_, '人名问题')">🔎 请检查text，其中可能存在不宜作为题目内容的人名，请尝试调整。（注：误报可能性较高）</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '包含问题')">⚠️ 请检查text，两个text之间似乎存在包含关系，可能不太合适，请尝试修改。</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '困惑符号')">⚠️ 请检查text中的标点符号。</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '少见符号')">⚠️ 在text中似乎存在少见的符号。</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '断句符号')">⚠️ 在text似乎存在断句符号，请评估是否有必要。如果是原文片段，请尝试改选不跨标点的片段；如果是自行编写的内容，请尝试改写成不需要断句的形式。</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '省略符号')">⚠️ 请检查text中的标点符号，似乎存在省略符号。如果是从原文中复制而来的，不用处理；如果是省略了原文，请将原文还原；如果省略号位于text两端，请检查是否必要，不必要则删除。</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '配对符号')">⚠️ 请检查text中的标点符号，似乎存在引号或括号之类的配对符号。如果是从原文中复制而来的，请保证符号是配对的；如果不是原文，请删除括号之类多余的解释性内容。</div>
+                    <!-- x -->
+                    <div class="alert alert-primary" v-if="judge(_qu_, '词性少见1')">🔎 请检查text1，程序认为它的词性序列「{{_qu_.text1pos}}」不太常见。（注：误报可能性较高）</div>
+                    <div class="alert alert-primary" v-if="judge(_qu_, '词性少见2')">🔎 请检查text2，程序认为它的词性序列「{{_qu_.text2pos}}」不太常见。（注：误报可能性较高）</div>
+                    <!-- x -->
+                    <div class="alert alert-primary" v-if="judge(_qu_, '字数太多1')">🔎 请检查text1，它的字数「{{_qu_.text1.length}}」较多，能不能精简一些？</div>
+                    <div class="alert alert-primary" v-if="judge(_qu_, '字数太多2')">🔎 请检查text2，它的字数「{{_qu_.text2.length}}」较多，能不能精简一些？</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '不在文中1')">⚠️ 请检查text1，它在context中未出现，可能有错字或存在省略或其他问题。</div>
+                    <div class="alert alert-warning" v-if="judge(_qu_, '不在文中2')">⚠️ 请检查text2，它在context中未出现，可能有错字或存在省略或其他问题。</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '这是C2')">⚠️ 请检查text2，它在context中没有原原本本的出现，照理说C类的text2应该是原文内容，请尝试修改。</div>
+                    <!-- x -->
+                    <div class="alert alert-info" v-if="judge(_qu_, '常识负例')">⚠️ 这是常识类负例，请确保 text2 不易理解成正确归因，如果可以理解成正确归因，尝试换成其他常识。<br>如果 text2 和上下文关系太弱，则对其进行完善，使其（至少看起来）与上下文有关，并且满足 ① 它本身就是错误的常识 或者 ② 虽然本身正确，但它与 text1 并不冲突。</div>
+                    <!-- x -->
+                    <div class="alert alert-warning" v-if="judge(_qu_, '常识小修')">⚠️ 这个例子里的常识（text2）是经过程序自动修改得到的，有可能导致judge2不再正确；如果judge2不正确了，或者这个常识不自然，请修改text2。</div>
+                    <!-- x -->
+                </div>
+            </div>
+            <div class="row my-1" :class="_qu_.control.checked?'card-checked':'card-not-checked'">
+                <div class="col col-12">
+                    <p v-if="_qu_.qID || _qu_.qID==0">【qID】{{_qu_.qID}}</p>
+                    <p v-if="_qu_.tempID || _qu_.tempID==0">【tempID】{{_qu_.tempID}}</p>
+                    <p>【context】{{_qu_.context}}</p>
+                    <p>【被替换词和替换词】{{_qu_.被替换词}} → {{_qu_.替换词}}</p>
+                    <p>【judge1】<span class="badge" :class="{'badge-danger':!_qu_.judge1,'badge-success':_qu_.judge1}">{{_qu_.judge1?"句子成立（true）":"句子不成立（false）"}}</span></p>
+                    <p v-if="_qu_.type=='A'">【reason】“{{_qu_.text1}}”和“{{_qu_.text2}}”不宜搭配</p>
+                    <p v-if="_qu_.type=='B'">【reason】“{{_qu_.text1}}”和“{{_qu_.text2}}”语义冲突</p>
+                    <p v-if="_qu_.type=='C'">【reason】“{{_qu_.text1}}”与上下文“{{_qu_.text2}}”存在信息冲突</p>
+                    <p v-if="_qu_.type=='D'">【reason】“{{_qu_.text1}}”不符合常识<span v-if="_qu_.text2">：</span>{{_qu_.text2}}<!-- <span v-if="_qu_.text2">”</span> --></p>
+                    <p v-if="_qu_.type=='E'">【reason】{{_qu_.text1}}</p>
+                    <p>【judge2】<span class="badge" :class="{'badge-danger':!_qu_.judge2,'badge-success':_qu_.judge2}">{{_qu_.judge2?"归因成立（true）":"归因不成立（false）"}}</span></p>
+                    <div class="form-group">
+                        <p>【text1】<strong class="text-feedback" v-if="(_qu_.type=='A'||_qu_.type=='B'||_qu_.type=='C'||_qu_.type=='D')&&!_qu_.context.includes(_qu_.text1)">text1在文中未出现！</strong><strong class="text-feedback" v-if="(_qu_.type=='C'||_qu_.type=='D')&&!_qu_.text1.includes(_qu_.替换词)">替换词在text1中未出现！</strong>
+                            <input class="form-control" type="text" v-model="_qu_.text1" :disabled="_qu_.control.checked">
+                        </p>
+                        <p>【text2】<strong class="text-feedback" v-if="(_qu_.type=='A'||_qu_.type=='B'||_qu_.type=='C')&&!_qu_.context.includes(_qu_.text2)">text2在文中未出现！</strong><strong class="text-feedback" v-if="(_qu_.type=='A')&&!_qu_.text2.includes(_qu_.替换词)">替换词在text2中未出现！</strong>
+                            <input class="form-control" type="text" v-model="_qu_.text2" :disabled="_qu_.control.checked">
+                        </p>
+                    </div>
+                    <p>【type】<select v-model="_qu_.type" :disabled="_qu_.control.checked">
+                        <option disabled value="">请选择</option>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>D</option>
+                    </select></p>
+                </div>
+                <!-- <div class="col col-12 col-md-4">
+                </div> -->
+            </div>
+            <div class="row my-1" :class="_qu_.control.checked?'card-checked':'card-not-checked'">
+                <div class="col col-12">
+                    <button type="button" v-on:click="_qu_.control.showDetail = !_qu_.control.showDetail" class="btn btn-sm" :class="_qu_.control.showDetail?'btn-light':'btn-light'">{{_qu_.control.showDetail?"收起更多细节":"查看更多细节"}}</button>
+                </div>
+            </div>
+            <div class="row my-1" v-if="_qu_.control.showDetail" :class="_qu_.control.checked?'card-checked':'card-not-checked'">
+                <div class="col col-12">
+                    <div class="container cluster-wrap">
+                        <p v-for="v, k in _qu_">【{{k}}】{{v}}</p>
+                        <button type="button" v-on:click="_qu_.control.showDetail = !_qu_.control.showDetail" class="btn btn-sm" :class="_qu_.control.showDetail?'btn-light':'btn-light'">{{_qu_.control.showDetail?"收起更多细节":"查看更多细节"}}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col col-12">
+                    <button type="button" v-on:click="onChecked(_qu_)" class="btn btn-sm btn-check" :class="_qu_.control.checked?'btn-success':'btn-light'">{{_qu_.control.checked?"✅ 已审核":"审核后点此按钮"}}</button> <button v-if="!_qu_.control.checked||_qu_.control.dropped" type="button" v-on:click="_qu_.control.dropped = !_qu_.control.dropped; _qu_.control.checked = _qu_.control.dropped" class="btn btn-sm" :class="_qu_.control.dropped?'btn-danger':'btn-light'">{{_qu_.control.dropped?"❌ 已弃用":"若难以处理，点此按钮弃用"}}</button>
+                </div>
+            </div>
+            <div class="row my-1" :class="_qu_.control.checked?'card-checked':'card-not-checked'">
+                <div class="col col-12">
+                    <div class="form-group">
+                        <p>备注：
+                            <input class="form-control" type="text" v-model="_qu_.note" :disabled="_qu_.control.checked">
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div></div>
+
+
+
+
+
+
+<!-- Modal -->
+<transition name = "modal-fade"><div v-show="ui.modal_open" class="modal-wrap">
+<div class="modal-backdrop show"></div>
+<div class="modal" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" style="display: block;" aria-modal="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">文档</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" v-on:click="toggle_modal('')">×</span>
+                </button>
+            </div>
+            <div class="modal-body"><div>
+                <div v-if="ui.modal_type=='A'">
+                    <p></p>
+                </div>
+                <div v-if="ui.modal_type=='B'">
+                    <p></p>
+                </div>
+                <div v-if="ui.modal_type=='C'">
+                    <p></p>
+                </div>
+                <div v-if="ui.modal_type=='D'">
+                    <p></p>
+                </div>
+                <div v-if="ui.modal_type=='E'"><p>E类已经不存在了，你不应该看到这段话。</p></div>
+                <div v-if="ui.modal_type=='G'">
+                    <p></p>
+                </div>
+            </div></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal" v-on:click="toggle_modal('')">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div></transition>
+
+
+<!-- Alert -->
+<div class="alert-wrap" style="display: block;" ref="alert_wrap">
+    <transition name = "fade" v-for="alert in ui.alerts"><div v-show = "alert.show" class="alert alert-dismissible alert-success" :class="'alert-'+alert.class">
+        <button type="button" class="close" v-on:click="remove_alert(alert.idx)">&times;</button>
+        <div v-html="alert.html"></div>
+    </div></transition>
+</div>
+
+
+
+
+
+</div>
+
+    <script type="text/javascript" src="dist/vue_2.6.10_.min.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/d3/5.12.0/d3.min.js"></script> -->
+
+    <script type="text/javascript" src="dist/FileSaver.js"></script>
+    <script type="text/javascript" src="js/check.js"></script>
+
+    <script type="text/javascript">
+        // document.getElementById("do_import").onclick = onImport;
+        // document.getElementById("do_export").onclick = onExport;
+    </script>
+
+</body>
+
+</html>
